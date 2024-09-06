@@ -21,7 +21,7 @@ module.exports = {
           600: "#4E529A",
           700: "#32325D",
           800: "#27274E",
-          900: "#11142B",
+          900: "#180F2D",
         },
         secondary: colors.yellow,
         neutral: colors.gray,
