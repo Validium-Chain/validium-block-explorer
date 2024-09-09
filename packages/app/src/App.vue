@@ -6,7 +6,7 @@
       <MaintenanceView v-if="currentNetwork.maintenance" />
       <router-view v-else />
     </div>
-    <the-footer />
+    <!-- <the-footer /> -->
   </template>
 </template>
 
@@ -34,6 +34,6 @@ setup();
 
 <style lang="scss">
 .container-app {
-  @apply container pt-6;
+  @apply container py-6;
 }
 </style>
