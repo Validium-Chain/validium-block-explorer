@@ -6,7 +6,7 @@
       "hostnames": [
         "localhost"
       ],
-      "icon": "/images/icons/zksync-arrows.svg",
+      "icon": "/validium-svg.svg",
       "l2ChainId": 270,
       "l2NetworkName": "Local",
       "maintenance": false,
