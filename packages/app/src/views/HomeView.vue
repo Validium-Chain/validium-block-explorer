@@ -3,6 +3,74 @@
     <h1 class="title">{{ t("blockExplorer.title") }}</h1>
     <div class="subtitle">{{ t("blockExplorer.subtitle") }}</div>
     <SearchForm class="search-form" />
+    <div class="pt-8 pb-2 overflow-auto">
+      <div class="grid md:grid-cols-1 grid-cols-2 min-w-[480px] bg-white rounded-md">
+        <div class="grid md:grid-cols-3 p-2">
+          <div class="py-2 px-4">
+            <div class="flex justify-between items-center">
+              <p class="text-sm text-[#91979d]">Total Accounts</p>
+              <p class="text-sm text-[#91979d]">24h</p>
+            </div>
+            <div class="flex justify-between items-center pt-1">
+              <p class="text-xl font-semibold text-[#101010]">268,496,885</p>
+              <p class="text-sm text-[#2d912c]">+251,780</p>
+            </div>
+          </div>
+          <div class="py-2 px-4 md:border-r md:border-l md:border-t-0 md:border-b-0 border-t border-b">
+            <div class="flex justify-between items-center">
+              <p class="text-sm text-[#91979d]">Total Accounts</p>
+              <p class="text-sm text-[#91979d]">24h</p>
+            </div>
+            <div class="flex justify-between items-center pt-1">
+              <p class="text-xl font-semibold text-[#101010]">268,496,885</p>
+              <p class="text-sm text-[#2d912c]">+251,780</p>
+            </div>
+          </div>
+          <div class="py-2 px-4">
+            <div class="flex justify-between items-center">
+              <p class="text-sm text-[#91979d]">Total Accounts</p>
+              <p class="text-sm text-[#91979d]">24h</p>
+            </div>
+            <div class="flex justify-between items-center pt-1">
+              <p class="text-xl font-semibold text-[#101010]">268,496,885</p>
+              <p class="text-sm text-[#2d912c]">+251,780</p>
+            </div>
+          </div>
+        </div>
+        <div class="grid md:grid-cols-3 bg-white rounded-md p-2">
+          <div class="py-2 px-4">
+            <div class="flex justify-between items-center">
+              <p class="text-sm text-[#91979d]">Total Accounts</p>
+              <p class="text-sm text-[#91979d]">24h</p>
+            </div>
+            <div class="flex justify-between items-center pt-1">
+              <p class="text-xl font-semibold text-[#101010]">268,496,885</p>
+              <p class="text-sm text-[#2d912c]">+251,780</p>
+            </div>
+          </div>
+          <div class="py-2 px-4 md:border-r md:border-l md:border-t-0 md:border-b-0 border-t border-b">
+            <div class="flex justify-between items-center">
+              <p class="text-sm text-[#91979d]">Total Accounts</p>
+              <p class="text-sm text-[#91979d]">24h</p>
+            </div>
+            <div class="flex justify-between items-center pt-1">
+              <p class="text-xl font-semibold text-[#101010]">268,496,885</p>
+              <p class="text-sm text-[#2d912c]">+251,780</p>
+            </div>
+          </div>
+          <div class="py-2 px-4">
+            <div class="flex justify-between items-center">
+              <p class="text-sm text-[#91979d]">Total Accounts</p>
+              <p class="text-sm text-[#91979d]">24h</p>
+            </div>
+            <div class="flex justify-between items-center pt-1">
+              <p class="text-xl font-semibold text-[#101010]">268,496,885</p>
+              <p class="text-sm text-[#2d912c]">+251,780</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="section">
       <NetworkStats
         v-if="networkStats || networkStatsPending"

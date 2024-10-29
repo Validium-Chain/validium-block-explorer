@@ -60,7 +60,7 @@ import TableBodyColumn from "@/components/common/table/TableBodyColumn.vue";
 import TableHeadColumn from "@/components/common/table/TableHeadColumn.vue";
 import TimeField from "@/components/common/table/fields/TimeField.vue";
 import EthereumIcon from "@/components/icons/Ethereum.vue";
-import ValidiumLogo from "@/components/icons/ValidiumLogo.vue";
+import ValidiumWhiteLogo from "@/components/icons/ValidiumWhiteLogo.vue";
 
 import type { BatchListItem } from "@/composables/useBatches";
 import type { PropType } from "vue";
@@ -90,7 +90,7 @@ defineProps({
 
 function getBadgeIconByStatus(status: BatchListItem["status"]) {
   if (status === "sealed") {
-    return ValidiumLogo;
+    return ValidiumWhiteLogo;
   }
   return EthereumIcon;
 }

@@ -53,7 +53,7 @@
       class="hero-banner-container"
       :class="[`${currentNetwork.name}`, { 'home-banner': route.path === '/' }]"
     >
-      <hero-arrows class="hero-image" />
+      <!-- <hero-arrows class="hero-image" /> -->
     </div>
     <transition
       enter-active-class="duration-200 ease-out"
@@ -321,7 +321,7 @@ const hasContent = computed(() => {
   }
 
   .home-banner {
-    @apply h-80;
+    @apply h-[30rem];
   }
 }
 
