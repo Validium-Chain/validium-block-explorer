@@ -19,6 +19,7 @@ import { TransferModule } from "./transfer/transfer.module";
 import { TransactionModule } from "./transaction/transaction.module";
 import { LogModule } from "./log/log.module";
 import { StatsModule } from "./stats/stats.module";
+import { DashboardModule } from "./dashboard/dashboard.module";
 import { MetricsMiddleware } from "./middlewares/metrics.middleware";
 import { metricProviders } from "./metrics";
 import { DbMetricsService } from "./dbMetrics.service";
@@ -44,6 +45,7 @@ import config from "./config";
     BalanceModule,
     BatchModule,
     BlockModule,
+    DashboardModule,
     TransferModule,
     TransactionModule,
     LogModule,
