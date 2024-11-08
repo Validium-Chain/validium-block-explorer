@@ -174,13 +174,12 @@ export class TransactionService {
   public count(criteria: CounterCriteria<Transaction> = {}): Promise<number> {
     return this.counterService.count(Transaction, criteria);
   }
-  
   public async getAvgGasFeeLast24h(): Promise<number> {
     const queryBuilder = this.transactionRepository.createQueryBuilder("transaction");
     const date = new Date();
     date.setDate(date.getDate() - 1);
     
-    queryBuilder.select("AVG(transaction.fee)", "avgFee");
+    queryBuilder.select("AVG(CAST(CONV(SUBSTRING(transaction.fee, 3), 16, 10) AS numeric))", "avgFee");
     queryBuilder.where("transaction.createdAt >= :date", { date });
   
     const result = await queryBuilder.getRawOne();
