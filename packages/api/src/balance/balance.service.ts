@@ -17,6 +17,10 @@ export class BalanceService {
     private readonly balanceRepository: Repository<Balance>
   ) {}
 
+  public async getBalanceCount(): Promise<number> {
+    return this.balanceRepository.count();
+  }
+
   public async getBalances(address: string): Promise<{ balances: Record<string, TokenBalance>; blockNumber: number }> {
     const latestBalancesQuery = this.balanceRepository.createQueryBuilder("latest_balances");
     latestBalancesQuery.select("address");
