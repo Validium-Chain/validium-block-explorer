@@ -3,10 +3,10 @@
   "version": "0.0.0",
   "title": "Validium Block Explorer Worker",
   "description": "Validium Block Explorer Worker",
-  "author": "Matter Labs",
+  "author": "Validium",
   "private": true,
   "license": "MIT",
-  "repository": "https://github.com/matter-labs/block-explorer",
+  "repository": "https://github.com/Validium-Chain/validium-block-explorer",
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",

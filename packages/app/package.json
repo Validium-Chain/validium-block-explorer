@@ -3,10 +3,10 @@
   "version": "0.0.0",
   "title": "Validium Block Explorer App",
   "description": "Validium Block Explorer App",
-  "author": "Matter Labs",
+  "author": "Validium",
   "private": true,
   "license": "MIT",
-  "repository": "https://github.com/matter-labs/block-explorer",
+  "repository": "https://github.com/Validium-Chain/validium-block-explorer",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
