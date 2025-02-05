@@ -3,9 +3,9 @@
   "version": "1.0.0-development",
   "title": "Validium Block Explorer",
   "description": "Validium Block Explorer",
-  "author": "Matter Labs",
+  "author": "Validium",
   "license": "MIT",
-  "repository": "https://github.com/matter-labs/block-explorer",
+  "repository": "https://github.com/Validium-Chain/validium-block-explorer",
   "private": true,
   "workspaces": [
     "packages/*"

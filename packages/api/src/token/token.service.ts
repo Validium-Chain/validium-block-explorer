@@ -19,6 +19,10 @@ export class TokenService {
     private readonly tokenRepository: Repository<Token>
   ) {}
 
+  public async getTokensCount(): Promise<number> {
+    return this.tokenRepository.count();
+  }
+
   public async findOne(address: string, fields?: FindOptionsSelect<Token>): Promise<Token> {
     const token = await this.tokenRepository.findOne({
       where: {
