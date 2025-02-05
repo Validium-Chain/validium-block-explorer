@@ -24,15 +24,15 @@ const config = useRuntimeConfig();
 const navigation = reactive([
   {
     label: computed(() => t("footer.nav.docs")),
-    url: "https://docs.zksync.io/build/tooling/zksync-block-explorers",
+    url: "https://devnet.explorer.validium.network/",
   },
   {
     label: computed(() => t("footer.nav.terms")),
-    url: "https://zksync.io/terms",
+    url: "https://devnet.explorer.validium.network/",
   },
   {
     label: computed(() => t("footer.nav.contact")),
-    url: "https://zksync.io/contact",
+    url: "https://devnet.explorer.validium.network/",
   },
 ]);
 </script>
