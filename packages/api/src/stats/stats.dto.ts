@@ -15,4 +15,7 @@ export class StatsDto {
 
   @ApiProperty({ type: Number, description: "The total number of processed transactions", example: 30 })
   public readonly totalTransactions: number;
+
+  @ApiProperty({ type: Number, description: "The total number of active accounts with balance > 0", example: 1024 })
+  public readonly totalActiveAccounts: number;
 }
