@@ -4,6 +4,7 @@ import { Not, IsNull } from "typeorm";
 import { BatchService } from "../batch/batch.service";
 import { BlockService } from "../block/block.service";
 import { TransactionService } from "../transaction/transaction.service";
+import { BalanceService } from "../balance/balance.service";
 import { StatsDto } from "./stats.dto";
 import { swagger } from "../config/featureFlags";
 
@@ -16,19 +17,21 @@ export class StatsController {
   constructor(
     private readonly batchService: BatchService,
     private readonly blocksService: BlockService,
-    private readonly transactionService: TransactionService
+    private readonly transactionService: TransactionService,
+    private readonly balanceService: BalanceService
   ) {}
 
   @Get()
   @ApiOkResponse({ description: "Blockchain stats", type: StatsDto })
   public async stats(): Promise<StatsDto> {
-    const [lastSealedBatch, lastVerifiedBatch, lastSealedBlock, lastVerifiedBlock, totalTransactions] =
+    const [lastSealedBatch, lastVerifiedBatch, lastSealedBlock, lastVerifiedBlock, totalTransactions, totalActiveAccounts] =
       await Promise.all([
         this.batchService.getLastBatchNumber(),
         this.batchService.getLastBatchNumber({ executedAt: Not(IsNull()) }),
         this.blocksService.getLastBlockNumber(),
         this.blocksService.getLastVerifiedBlockNumber(),
         this.transactionService.count(),
+        this.balanceService.getTotalActiveAccounts(),
       ]);
 
     return {
@@ -37,6 +40,7 @@ export class StatsController {
       lastSealedBlock,
       lastVerifiedBlock,
       totalTransactions,
+      totalActiveAccounts,
     };
   }
 }
