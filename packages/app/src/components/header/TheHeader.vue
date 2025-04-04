@@ -187,10 +187,10 @@ const links = [
     label: computed(() => t("header.nav.apiDocs")),
     url: computed(() => `${currentNetwork.value.apiUrl}/docs`),
   },
-  {
-    label: computed(() => t("header.nav.contractVerification")),
-    to: { name: "contract-verification" },
-  },
+  // {
+  //   label: computed(() => t("header.nav.contractVerification")),
+  //   to: { name: "contract-verification" },
+  // },
 ];
 
 if (currentNetwork.value.bridgeUrl) {
@@ -321,7 +321,7 @@ const hasContent = computed(() => {
   }
 
   .home-banner {
-    @apply h-[30rem];
+    @apply h-[20rem] md:h-[32rem];
   }
 }
 

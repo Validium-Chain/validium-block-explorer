@@ -3,70 +3,42 @@
     <h1 class="title">{{ t("blockExplorer.title") }}</h1>
     <div class="subtitle">{{ t("blockExplorer.subtitle") }}</div>
     <SearchForm class="search-form" />
-    <div class="pt-8 pb-2 overflow-auto">
-      <div class="grid md:grid-cols-1 grid-cols-2 min-w-[480px] bg-white rounded-md">
-        <div class="grid md:grid-cols-3 p-2">
-          <div class="py-2 px-4">
-            <div class="flex justify-between items-center">
-              <p class="text-sm text-[#91979d]">Total Accounts</p>
-              <p class="text-sm text-[#91979d]">24h</p>
-            </div>
-            <div class="flex justify-between items-center pt-1">
-              <p class="text-xl font-semibold text-[#101010]">268,496,885</p>
-              <p class="text-sm text-[#2d912c]">+251,780</p>
-            </div>
-          </div>
-          <div class="py-2 px-4 md:border-r md:border-l md:border-t-0 md:border-b-0 border-t border-b">
-            <div class="flex justify-between items-center">
-              <p class="text-sm text-[#91979d]">Total Accounts</p>
-              <p class="text-sm text-[#91979d]">24h</p>
-            </div>
-            <div class="flex justify-between items-center pt-1">
-              <p class="text-xl font-semibold text-[#101010]">268,496,885</p>
-              <p class="text-sm text-[#2d912c]">+251,780</p>
-            </div>
-          </div>
-          <div class="py-2 px-4">
-            <div class="flex justify-between items-center">
-              <p class="text-sm text-[#91979d]">Total Accounts</p>
-              <p class="text-sm text-[#91979d]">24h</p>
-            </div>
-            <div class="flex justify-between items-center pt-1">
-              <p class="text-xl font-semibold text-[#101010]">268,496,885</p>
-              <p class="text-sm text-[#2d912c]">+251,780</p>
-            </div>
+    <div class="stats-section">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-content">
+            <p class="stat-value">{{ validiumStats?.totalActiveAccounts?.toLocaleString() || "--" }}</p>
+            <p class="stat-label">Total Active Accounts</p>
           </div>
         </div>
-        <div class="grid md:grid-cols-3 bg-white rounded-md p-2">
-          <div class="py-2 px-4">
-            <div class="flex justify-between items-center">
-              <p class="text-sm text-[#91979d]">Total Accounts</p>
-              <p class="text-sm text-[#91979d]">24h</p>
-            </div>
-            <div class="flex justify-between items-center pt-1">
-              <p class="text-xl font-semibold text-[#101010]">268,496,885</p>
-              <p class="text-sm text-[#2d912c]">+251,780</p>
-            </div>
+        <div class="stat-card">
+          <div class="stat-content">
+            <p class="stat-value">{{ validiumStats?.totalTransactions?.toLocaleString() || "--" }}</p>
+            <p class="stat-label">Total Transactions</p>
           </div>
-          <div class="py-2 px-4 md:border-r md:border-l md:border-t-0 md:border-b-0 border-t border-b">
-            <div class="flex justify-between items-center">
-              <p class="text-sm text-[#91979d]">Total Accounts</p>
-              <p class="text-sm text-[#91979d]">24h</p>
-            </div>
-            <div class="flex justify-between items-center pt-1">
-              <p class="text-xl font-semibold text-[#101010]">268,496,885</p>
-              <p class="text-sm text-[#2d912c]">+251,780</p>
-            </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-content">
+            <p class="stat-value">{{ validiumStats?.lastSealedBlock?.toLocaleString() || "--" }}</p>
+            <p class="stat-label">Last Sealed Block</p>
           </div>
-          <div class="py-2 px-4">
-            <div class="flex justify-between items-center">
-              <p class="text-sm text-[#91979d]">Total Accounts</p>
-              <p class="text-sm text-[#91979d]">24h</p>
-            </div>
-            <div class="flex justify-between items-center pt-1">
-              <p class="text-xl font-semibold text-[#101010]">268,496,885</p>
-              <p class="text-sm text-[#2d912c]">+251,780</p>
-            </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-content">
+            <p class="stat-value">{{ validiumStats?.lastVerifiedBlock?.toLocaleString() || "--" }}</p>
+            <p class="stat-label">Last Verified Block</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-content">
+            <p class="stat-value">{{ validiumStats?.lastSealedBatch?.toLocaleString() || "--" }}</p>
+            <p class="stat-label">Last Sealed Batch</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-content">
+            <p class="stat-value">{{ validiumStats?.lastVerifiedBatch?.toLocaleString() || "--" }}</p>
+            <p class="stat-label">Last Verified Batch</p>
           </div>
         </div>
       </div>
@@ -121,7 +93,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 
 import NetworkStats from "@/components/NetworkStats.vue";
@@ -133,18 +105,22 @@ import TransactionsTable from "@/components/transactions/Table.vue";
 
 import useBatches from "@/composables/useBatches";
 import useNetworkStats from "@/composables/useNetworkStats";
+import useValidiumStats from "@/composables/useValidiumStats";
 
 const { t } = useI18n();
 const { fetch: fetchNetworkStats, pending: networkStatsPending, item: networkStats } = useNetworkStats();
 const { load: getBatches, pending: isBatchesPending, failed: isBatchesFailed, data: batches } = useBatches();
+const { stats: validiumStats, fetchStats } = useValidiumStats();
 
 const displayedBatches = computed(() => {
   return batches.value ? batches.value : [];
 });
 
-fetchNetworkStats();
-
-getBatches(1, new Date());
+onMounted(() => {
+  fetchNetworkStats();
+  fetchStats();
+  getBatches(1, new Date());
+});
 </script>
 
 <style lang="scss" scoped>
@@ -200,6 +176,31 @@ getBatches(1, new Date());
   }
   .not-found {
     @apply whitespace-normal py-8 text-center text-neutral-400;
+  }
+}
+
+.stats-section {
+  @apply mt-8 mb-4;
+
+  .stats-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5;
+  }
+
+  .stat-card {
+    @apply bg-gradient-to-br from-white to-gray-50 rounded-2xl p-5;
+    @apply border border-gray-100 shadow-md lg:shadow-sm hover:shadow-md transition-all duration-300;
+
+    .stat-content {
+      @apply flex flex-col items-center text-center;
+
+      .stat-value {
+        @apply text-3xl font-bold text-gray-900 mb-1;
+      }
+
+      .stat-label {
+        @apply text-sm text-gray-500 font-medium;
+      }
+    }
   }
 }
 </style>
