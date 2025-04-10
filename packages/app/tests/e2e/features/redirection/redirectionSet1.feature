@@ -32,7 +32,7 @@ Feature: Redirection
   @id251
   Scenario: Verify redirection for Documentation link
     Given I click by text "Documentation"
-    Then New page have "https://docs.zksync.io/build/tooling/zksync-block-explorers" address
+    Then New page have "https://validium.gitbook.io/docs/tooling/block-explorers" address
 
   @id252
   Scenario Outline: Verify redirection for "<Sub-Section>" in BE menu
