@@ -159,7 +159,7 @@ const { currentNetwork } = useContext();
 const navigation = reactive([
   {
     label: computed(() => t("header.nav.documentation")),
-    url: "https://docs.zksync.io/build/tooling/zksync-block-explorers",
+    url: "https://validium.gitbook.io/docs/tooling/block-explorers",
   },
 ]);
 
