@@ -105,10 +105,11 @@ export class BalanceService {
   }
 
   public async getTotalActiveAccounts(): Promise<number> {
-    const query = this.balanceRepository.createQueryBuilder("balances")
+    const query = this.balanceRepository
+      .createQueryBuilder("balances")
       .select("COUNT(DISTINCT balances.address)", "activeCount")
       .where("CAST(balances.balance AS NUMERIC) > 0");
-    
+
     const result = await query.getRawOne();
     return parseInt(result.activeCount, 10);
   }
