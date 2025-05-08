@@ -3,6 +3,7 @@ import { ref } from "vue";
 
 import axios from "axios";
 
+import useContext from "./useContext";
 interface ValidiumStats {
   lastSealedBatch: number;
   lastVerifiedBatch: number;
@@ -12,7 +13,7 @@ interface ValidiumStats {
   totalActiveAccounts: number;
 }
 
-export default function useValidiumStats() {
+export default function useValidiumStats(context = useContext()) {
   const stats = ref<ValidiumStats | null>(null);
   const pending = ref(false);
   const error = ref<string | null>(null);
@@ -21,7 +22,8 @@ export default function useValidiumStats() {
     pending.value = true;
     error.value = null;
     try {
-      const response = await axios.get("https://devnet.api.validium.network/stats");
+      const statsUrl = `${context.currentNetwork.value.apiUrl}/stats`;
+      const response = await axios.get(statsUrl);
       stats.value = response.data;
     } catch (e) {
       error.value = "Failed to fetch stats";
