@@ -59,17 +59,22 @@
           <p>{{ t("blockExplorer.batches") }}</p>
           <InfoTooltip class="batches-tooltip">{{ t("batches.tooltipInfo") }}</InfoTooltip>
         </div>
-        <TableBatches
-          v-if="(isBatchesPending || batches) && !isBatchesFailed"
-          :data-testid="$testId.latestBatchesTable"
-          :loading="isBatchesPending"
-          :batches="displayedBatches"
-          :columns="['status', 'size', 'txnBatch', 'age']"
-        >
-          <template #not-found>
-            <p class="not-found">{{ t("batches.table.notFoundHomePage") }}</p>
-          </template>
-        </TableBatches>
+        <template v-if="(isBatchesPending || batches) && !isBatchesFailed">
+          <TableBatches
+            :data-testid="$testId.latestBatchesTable"
+            :loading="isBatchesPending"
+            :batches="displayedBatches"
+            :columns="['status', 'size', 'txnBatch', 'age']"
+          >
+            <template #not-found>
+              <p class="not-found">{{ t("batches.table.notFoundHomePage") }}</p>
+            </template>
+          </TableBatches>
+          <Button variant="outlined" color="primary" @click="router.push('batches')">
+            {{ t("batches.viewAll") }}
+            <ArrowRightIcon class="batches-view-all-arrow" />
+          </Button>
+        </template>
         <span v-else-if="isBatchesFailed" class="error-message">
           {{ t("failedRequest") }}
         </span>
@@ -88,6 +93,10 @@
             </TableBodyColumn>
           </template>
         </TransactionsTable>
+        <Button variant="outlined" color="primary" @click="router.push('transactions')">
+          {{ t("transactions.viewAll") }}
+          <ArrowRightIcon class="transactions-view-all-arrow" />
+        </Button>
       </div>
     </div>
   </div>
@@ -96,9 +105,12 @@
 import { computed, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 
+import { ArrowRightIcon } from "@heroicons/vue/outline";
+
 import NetworkStats from "@/components/NetworkStats.vue";
 import SearchForm from "@/components/SearchForm.vue";
 import TableBatches from "@/components/batches/Table.vue";
+import Button from "@/components/common/Button.vue";
 import InfoTooltip from "@/components/common/InfoTooltip.vue";
 import TableBodyColumn from "@/components/common/table/TableBodyColumn.vue";
 import TransactionsTable from "@/components/transactions/Table.vue";
@@ -106,6 +118,8 @@ import TransactionsTable from "@/components/transactions/Table.vue";
 import useBatches from "@/composables/useBatches";
 import useNetworkStats from "@/composables/useNetworkStats";
 import useValidiumStats from "@/composables/useValidiumStats";
+
+import router from "@/router";
 
 const { t } = useI18n();
 const { fetch: fetchNetworkStats, pending: networkStatsPending, item: networkStats } = useNetworkStats();
@@ -164,6 +178,10 @@ onMounted(() => {
       .batches-tooltip {
         @apply mb-3;
       }
+    }
+    .batches-view-all-arrow,
+    .transactions-view-all-arrow {
+      @apply w-4 ml-1;
     }
   }
 

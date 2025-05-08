@@ -44,6 +44,7 @@ export class AddressController {
   @Get(":address")
   @ApiParam({
     name: "address",
+    type: String,
     schema: { pattern: ADDRESS_REGEX_PATTERN },
     example: constants.address,
     description: "Valid hex address",
@@ -74,6 +75,7 @@ export class AddressController {
         creatorTxHash: addressRecord.creatorTxHash,
         totalTransactions,
         creatorAddress: addressRecord.creatorAddress,
+        isEvmLike: addressRecord.isEvmLike,
       };
     }
 
@@ -106,6 +108,7 @@ export class AddressController {
   @Get(":address/logs")
   @ApiParam({
     name: "address",
+    type: String,
     schema: { pattern: ADDRESS_REGEX_PATTERN },
     example: constants.contractAddressWithLogs,
     description: "Valid hex address",
@@ -130,6 +133,7 @@ export class AddressController {
   @Get(":address/transfers")
   @ApiParam({
     name: "address",
+    type: String,
     schema: { pattern: ADDRESS_REGEX_PATTERN },
     example: constants.address,
     description: "Valid hex address",

@@ -105,8 +105,8 @@
             "transactionHashTooltip": "Transaction hash is a unique 66-character identifier that is generated whenever a transaction is executed",
             "nonce": "Nonce",
             "nonceTooltip": "Number of transactions sent from a sender address",
-            "created": "Created",
-            "createdTooltip": "The date and time at which a transaction is added to the block",
+            "receivedAt": "Received",
+            "receivedAtTooltip": "The date and time when the transaction was received",
             "sendersNonce": "Sender`s Nonce",
             "from": "From",
             "fromTooltip": "The sending party of the transaction",
@@ -143,6 +143,7 @@
             "transferMethodName": "Transfer",
             "timestamp": "Timestamp",
             "age": "Age",
+            "dateTimeUTC": "Date Time (UTC)",
             "tokenAddress": "Token address",
             "tokenName": "Token name",
             "tokenSymbol": "Token symbol",
@@ -204,7 +205,8 @@
         "loadingInfoFailed": "Loading transaction info failed",
         "transactionNotFound": "Transaction wasn't found",
         "transactionInfo": "Transaction info",
-        "tryRequestAgain": "Try again"
+        "tryRequestAgain": "Try again",
+        "viewAll": "View All Transactions"
     },
     "transactionData": {
         "showOriginalInput": "Show original input",
@@ -272,6 +274,7 @@
             "transactionsShort": "txns"
         },
         "tooltipInfo": "Latest batches submitted to Ethereum Network",
+        "viewAll": "View All Batches",
         "status": {
             "verified": "Executed on",
             "sealed": "Processed on",
@@ -319,6 +322,25 @@
     "addressView": {
         "title": "Address"
     },
+    "tokenView": {
+        "title": "Token",
+        "token": "Token",
+        "table": {
+            "market": {
+                "marketCap": "Market Cap",
+                "totalSupply": "Total Supply",
+                "circulatingSupply": "Circulating Supply Market Cap",
+                "price": "Price",
+                "decimals": "Decimals"
+            },
+            "overview": {
+                "holders": "Holders",
+                "maxTotalSupply": "Max Total Supply",
+                "totalTransfers": "Total Transfers",
+                "tokenContract": "Token Contract"
+            }
+        }
+    },
     "contract": {
         "title": "Contract",
         "contractNumber": "Contract ",
@@ -326,6 +348,12 @@
         "infoTableError": "An Error Occurred",
         "balanceTableTitle": "Balances",
         "notFound": "Not Found",
+        "verified": "Source Code",
+        "verifiedTooltip": "The contract's source code has been verified to match its on-chain Bytecode. Source code verification does not imply the contract is safe to interact with.",
+        "evm": "EVM",
+        "created": "Created",
+        "contractCreated": "Contract created",
+        "evmTooltip": "This is an EVM contract.",
         "transactionTable": {
             "error": "Something went wrong",
             "notFound": {
@@ -363,6 +391,9 @@
             "singleFileContract": "Single file contract",
             "fileLabel": "File {index} of {total}: {fileName}"
         },
+        "settings": {
+            "label": "Settings"
+        },
         "events": {
             "txnHash": "txn hash",
             "method": "method",
@@ -373,6 +404,7 @@
             "hide": "Hide"
         },
         "abiInteraction": {
+            "contractAbi": "Contract ABI",
             "transactionHash": "Transaction Hash: {transactionHash}",
             "connectWalletToInteract": "Connect Wallet to write",
             "metaMaskNotFound": "MetaMask not found. Please install MetaMask to continue.",
@@ -425,6 +457,9 @@
                     "not_valid": "Please, provide a valid contract address"
                 }
             },
+            "compilationTarget": {
+                "title": "Compilation target"
+            },
             "contractName": {
                 "label": "Contract Name",
                 "solcUnderline": "Must match the name specified in the code. For example, in contract MyContract { '{..}' } MyContract is the contract name.",
@@ -443,6 +478,10 @@
                     "required": "Contract path is required"
                 }
             },
+            "runs": {
+                "label": "Runs",
+                "underline": "Optimize for how many times you intend to run the code. Lower values will optimize more for initial deployment cost, higher values will optimize more for high-frequency usage."
+            },
             "optimizationUsed": {
                 "label": "Optimization",
                 "options": {
@@ -458,7 +497,8 @@
                     "required": "Solc version is required"
                 },
                 "error": "Unable to get list of supported Solc versions",
-                "zkVM": "zkVM"
+                "zkVM": "Use zkVM solc",
+                "EVM": "EVM"
             },
             "zksolcVersion": {
                 "label": "Zksolc Version",
@@ -467,7 +507,15 @@
                     "required": "Zksolc version is required"
                 },
                 "error": "Unable to get list of supported Zksolc versions",
-                "details": "Details"
+                "details": "Details",
+                "evmVersion": {
+                    "label": "EVM Version",
+                    "custom": "Custom",
+                    "inputPlaceholder": "Custom version...",
+                    "validation": {
+                        "required": "EVM Version is required"
+                    }
+                }
             },
             "vyperVersion": {
                 "label": "Vyper Version",
@@ -484,7 +532,13 @@
                     "required": "Zkvyper version is required"
                 },
                 "error": "Unable to get list of supported Zkvyper versions",
-                "details": "Details"
+                "details": "Details",
+                "evmVersion": {
+                    "label": "EVM Version",
+                    "validation": {
+                        "required": "EVM Version is required"
+                    }
+                }
             },
             "compilerType": {
                 "label": "Compiler type",
@@ -531,7 +585,17 @@
             "compilerVersion": "Compiler Version",
             "zksolcVersion": "Zksolc Version",
             "zkvyperVersion": "Zkvyper Version",
-            "optimization": "Optimization"
+            "evmVersion": "EVM Version",
+            "optimization": {
+                "title": "Optimization",
+                "enabled": "Yes",
+                "disabled": "No",
+                "runsTemplate": ", with {runs} runs",
+                "modeTemplate": ", with mode {mode}"
+            },
+            "autoVerified": "The contract wasn't manually verified, but its bytecode matches the bytecode of the following contract:",
+            "partialVerification": "Contract is partially verified: the contract metadata hash and/or constructor arguments do not match. Partial verification provides less guarantees about the authenticity of the code.",
+            "partialVerificationDetails": "See more details"
         },
         "multiFileVerification": {
             "solcTitle": "Please select the Solidity (*.sol) files for upload",
@@ -586,7 +650,26 @@
         "table": {
             "tokenName": "Token Name",
             "price": "Price",
-            "tokenAddress": "Token Address"
+            "tokenAddress": "Token Address",
+            "bridged": {
+                "title": "Bridged",
+                "tooltip": "This token is bridged from L1 to ZKsync Era"
+            },
+            "native": {
+                "title": "L2-native",
+                "tooltip": "This token is native to ZKsync Era"
+            },
+            "tokenAddressL2": "L2 Token address",
+            "tokenAddressL1": "L1 Token address"
+        }
+    },
+    "tokenHolders": {
+        "notFound": "Token doesn't have any holders at this moment",
+        "table": {
+            "address": "Address",
+            "balance": "Quantity",
+            "percentage": "Percentage",
+            "value": "Value"
         }
     },
     "pageError": {
@@ -684,7 +767,8 @@
         "transactions": "Transactions",
         "contract": "Contract",
         "events": "Events",
-        "transfers": "Transfers"
+        "transfers": "Transfers",
+        "holders": "Holders"
     },
     "contractInfoTabs": {
         "contract": "Contract",
@@ -723,7 +807,10 @@
         }
     },
     "systemAlert": {
-        "indexerDelayed": "Transaction indexing is {indexerDelayInHours} hours behind. Transactions are being processed normally and will gradually show up. You can also use other <a href=\"https://devnet.explorer.validium.network/\" style=\"color: inherit\">explorers</a> meanwhile.",
-        "indexerDelayedDueToHeavyLoad": "The network is under a heavy load at the moment and transaction indexing on the explorer is {indexerDelayInHours} hours behind. Transactions are being processed normally and will gradually show up. You can also use other <a href=\"https://devnet.explorer.validium.network/\" style=\"color: inherit\">explorers</a> meanwhile."
+        "indexerDelayed": "Transaction indexing is {indexerDelayInHours} hours behind. Transactions are being processed normally and will gradually show up. You can also use other <a href=\"https://www.zksync.io/era#explorers\" style=\"color: inherit\">explorers</a> meanwhile.",
+        "indexerDelayedDueToHeavyLoad": "The network is under a heavy load at the moment and transaction indexing on the explorer is {indexerDelayInHours} hours behind. Transactions are being processed normally and will gradually show up. You can also use other <a href=\"https://www.zksync.io/era#explorers\" style=\"color: inherit\">explorers</a> meanwhile."
+    },
+    "pagination": {
+        "records": "Records"
     }
 }

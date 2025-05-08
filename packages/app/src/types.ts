@@ -38,6 +38,8 @@ export type ContractVerificationData = {
   contractAddress: string;
   contractName: string;
   optimizationUsed: boolean;
+  isEVM: boolean;
+  optimizerRuns: number;
   sourceCode:
     | string
     | {
@@ -50,12 +52,20 @@ export type ContractVerificationData = {
         settings: {
           optimizer: {
             enabled: boolean;
+            runs?: number;
           };
         };
       };
   zkCompilerVersion: string;
+  evmVersion: string;
   compilerVersion: string;
   constructorArguments: string;
 };
 
 export type ContractVerificationStatus = "successful" | "failed" | "in_progress" | "queued";
+
+export enum TimeFormat {
+  TIME_AGO = "time_ago",
+  FULL = "full",
+  TIME_AGO_AND_FULL = "time_ago_and_full",
+}

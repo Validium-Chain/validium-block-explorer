@@ -135,11 +135,11 @@ Feature: Redirection
   #Tokens page 
   @id250 @testnetSmokeSuite
   Scenario Outline: Verify redirection from Tokens page after "<Artifact type>" click
-    Given I go to page "/tokenlist/"
+    Given I go to page "/tokens/"
     When I click on the first "<Artifact type>" link
     Given Page with part address "<url>" includes ID result
 
     Examples:
       | Artifact type     | url         |
-      | token icon        | /address/   |
-      | token address     | /address/   |
+      | token icon        | /token/   |
+      | token address     | /token/   |
