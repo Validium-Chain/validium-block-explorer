@@ -12,22 +12,21 @@ const entityName = "dashboard";
 @ApiExcludeController(!swagger.bffEnabled)
 @Controller(entityName)
 export class DashboardController {
-    constructor(
-        private readonly balanceService: BalanceService,
-        private readonly tokenService: TokenService,
-        private readonly transactionService: TransactionService
-      ) {}    
+  constructor(
+    private readonly balanceService: BalanceService,
+    private readonly tokenService: TokenService,
+    private readonly transactionService: TransactionService
+  ) {}
 
-
-    @Get()
-    @ApiOkResponse({ description: "Dashboard", type: DashboardDto })
-    public async dashboard(): Promise<DashboardDto> {
-        const response = {
-            totalAccounts: await this.balanceService.getBalanceCount(),
-            totalTransaction: await this.transactionService.count(),
-            avgGasFee: await this.transactionService.getAvgGasFeeLast24h(),
-            totalTokens: await this.tokenService.getTokensCount()
-        };
-        return response;
-    }
+  @Get()
+  @ApiOkResponse({ description: "Dashboard", type: DashboardDto })
+  public async dashboard(): Promise<DashboardDto> {
+    const response = {
+      totalAccounts: await this.balanceService.getBalanceCount(),
+      totalTransaction: await this.transactionService.count(),
+      avgGasFee: await this.transactionService.getAvgGasFeeLast24h(),
+      totalTokens: await this.tokenService.getTokensCount(),
+    };
+    return response;
+  }
 }

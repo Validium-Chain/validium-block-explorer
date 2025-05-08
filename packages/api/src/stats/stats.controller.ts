@@ -24,15 +24,21 @@ export class StatsController {
   @Get()
   @ApiOkResponse({ description: "Blockchain stats", type: StatsDto })
   public async stats(): Promise<StatsDto> {
-    const [lastSealedBatch, lastVerifiedBatch, lastSealedBlock, lastVerifiedBlock, totalTransactions, totalActiveAccounts] =
-      await Promise.all([
-        this.batchService.getLastBatchNumber(),
-        this.batchService.getLastBatchNumber({ executedAt: Not(IsNull()) }),
-        this.blocksService.getLastBlockNumber(),
-        this.blocksService.getLastVerifiedBlockNumber(),
-        this.transactionService.count(),
-        this.balanceService.getTotalActiveAccounts(),
-      ]);
+    const [
+      lastSealedBatch,
+      lastVerifiedBatch,
+      lastSealedBlock,
+      lastVerifiedBlock,
+      totalTransactions,
+      totalActiveAccounts,
+    ] = await Promise.all([
+      this.batchService.getLastBatchNumber(),
+      this.batchService.getLastBatchNumber({ executedAt: Not(IsNull()) }),
+      this.blocksService.getLastBlockNumber(),
+      this.blocksService.getLastVerifiedBlockNumber(),
+      this.transactionService.count(),
+      this.balanceService.getTotalActiveAccounts(),
+    ]);
 
     return {
       lastSealedBatch,
