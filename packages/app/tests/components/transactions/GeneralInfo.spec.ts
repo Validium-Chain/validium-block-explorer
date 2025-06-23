@@ -176,6 +176,8 @@ const transaction: TransactionItem = {
   gasPerPubdata: "800",
   maxFeePerGas: "7000",
   maxPriorityFeePerGas: "8000",
+  isEvmLike: false,
+  contractAddress: null,
 };
 
 vi.mock("@/composables/useToken", () => {
@@ -303,7 +305,7 @@ describe("Transaction info table", () => {
     expect(gasLimitAndUsedTooltip).toBe(i18n.global.t("transactions.table.gasLimitAndUsedTooltip"));
     expect(gasPerPubdataTooltip).toBe(i18n.global.t("transactions.table.gasPerPubdataTooltip"));
     expect(nonceTooltip).toBe(i18n.global.t("transactions.table.nonceTooltip"));
-    expect(createdAtTooltip).toBe(i18n.global.t("transactions.table.createdTooltip"));
+    expect(createdAtTooltip).toBe(i18n.global.t("transactions.table.receivedAtTooltip"));
   });
   it("renders indexing transaction status", async () => {
     const wrapper = mount(Table, {
@@ -345,7 +347,7 @@ describe("Transaction info table", () => {
     await nextTick();
     const status = wrapper.findAll("tbody tr td:nth-child(2)")[1];
     const badges = status.findAllComponents(Badge);
-    const reason = wrapper.find(".transaction-reason-value");
+    const reason = wrapper.find(".transaction-error-value");
     expect(badges.length).toBe(1);
     expect(badges[0].text()).toBe(i18n.global.t("transactions.statusComponent.failed"));
     expect(reason.text()).toBe("Revert reason");

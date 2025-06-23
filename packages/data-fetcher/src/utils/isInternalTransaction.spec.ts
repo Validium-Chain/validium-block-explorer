@@ -1,4 +1,4 @@
-import { types, utils } from "zksync-web3";
+import { types, utils } from "zksync-ethers";
 import { Transfer } from "../transfer/interfaces/transfer.interface";
 import { TransferType } from "../transfer/transfer.service";
 import isInternalTransaction from "./isInternalTransaction";
@@ -90,6 +90,23 @@ describe("isInternalTransaction", () => {
         from: "from",
         to: "to1",
       } as Transfer)
+    ).toBeTruthy();
+  });
+
+  it("returns true when transfer from addresses are the same but receipt to is null", () => {
+    expect(
+      isInternalTransaction(
+        {
+          type: TransferType.Transfer,
+          tokenAddress: BASE_TOKEN_ADDRESS,
+          from: "FROM",
+          to: "to",
+        } as Transfer,
+        {
+          from: "from",
+          to: null,
+        } as types.TransactionReceipt
+      )
     ).toBeTruthy();
   });
 });

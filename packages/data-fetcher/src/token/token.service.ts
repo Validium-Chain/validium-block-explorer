@@ -1,4 +1,4 @@
-import { types } from "zksync-web3";
+import { types } from "zksync-ethers";
 import { Injectable, Logger } from "@nestjs/common";
 import { InjectMetric } from "@willsoto/nestjs-prometheus";
 import { Histogram } from "prom-client";
@@ -74,6 +74,7 @@ export class TokenService {
 
     const bridgeLog =
       transactionReceipt &&
+      transactionReceipt.to &&
       transactionReceipt.to.toLowerCase() === this.blockchainService.bridgeAddresses.l2Erc20DefaultBridge &&
       transactionReceipt.logs?.find(
         (log) =>

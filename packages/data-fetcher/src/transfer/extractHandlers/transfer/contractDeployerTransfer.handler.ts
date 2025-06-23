@@ -1,4 +1,4 @@
-import { utils, types } from "zksync-web3";
+import { utils, types } from "zksync-ethers";
 import { ExtractTransferHandler } from "../../interfaces/extractTransferHandler.interface";
 import { Transfer } from "../../interfaces/transfer.interface";
 import { ZERO_HASH_64 } from "../../../constants";
@@ -12,11 +12,12 @@ export const contractDeployerTransferHandler: ExtractTransferHandler = {
   matches: (log: types.Log, transactionReceipt: types.TransactionReceipt): boolean =>
     transactionReceipt?.to === utils.CONTRACT_DEPLOYER_ADDRESS &&
     (log.topics.length === 1 || log.topics[1] === ZERO_HASH_64),
-  extract: (
+  extract: async (
     log: types.Log,
+    _,
     blockDetails: types.BlockDetails,
     transactionDetails?: types.TransactionDetails
-  ): Transfer => {
+  ): Promise<Transfer> => {
     const parsedLog =
       log.topics.length === 1
         ? parseLog(CONTRACT_INTERFACES.TRANSFER_WITH_NO_INDEXES, log)
@@ -31,7 +32,7 @@ export const contractDeployerTransferHandler: ExtractTransferHandler = {
       type: TransferType.Mint,
       tokenType: TokenType.ERC20,
       isFeeOrRefund: false,
-      logIndex: log.logIndex,
+      logIndex: log.index,
       transactionIndex: log.transactionIndex,
       timestamp: transactionDetails?.receivedAt || unixTimeToDate(blockDetails.timestamp),
     };

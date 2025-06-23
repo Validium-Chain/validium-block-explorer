@@ -1,14 +1,15 @@
 import { Injectable, OnModuleInit, Logger } from "@nestjs/common";
-import { BigNumber } from "ethers";
-import { utils, types } from "zksync-web3";
+import { utils, types } from "zksync-ethers";
 import { Histogram } from "prom-client";
 import { InjectMetric } from "@willsoto/nestjs-prometheus";
-import { EventType, Listener } from "@ethersproject/abstract-provider";
+import { Listener } from "ethers";
 import { ConfigService } from "@nestjs/config";
 import { setTimeout } from "timers/promises";
+import { ProviderEvent } from "ethers";
 import { JsonRpcProviderBase } from "../rpcProvider";
 import { BLOCKCHAIN_RPC_CALL_DURATION_METRIC_NAME, BlockchainRpcCallMetricLabel } from "../metrics";
 import { RetryableContract } from "./retryableContract";
+import { L2_NATIVE_TOKEN_VAULT_ADDRESS, CONTRACT_INTERFACES } from "../constants";
 
 export interface BridgeAddresses {
   l2Erc20DefaultBridge?: string;
@@ -148,7 +149,7 @@ export class BlockchainService implements OnModuleInit {
     }, "debugTraceTransaction");
   }
 
-  public async on(eventName: EventType, listener: Listener): Promise<void> {
+  public async on(eventName: ProviderEvent, listener: Listener): Promise<void> {
     this.provider.on(eventName, listener);
   }
 
@@ -166,17 +167,25 @@ export class BlockchainService implements OnModuleInit {
     };
   }
 
-  public async getBalance(address: string, blockNumber: number, tokenAddress: string): Promise<BigNumber> {
-    const blockTag = this.provider.formatter.blockTag(blockNumber);
+  public async getTokenAddressByAssetId(assetId: string): Promise<string> {
+    const erc20Contract = new RetryableContract(
+      L2_NATIVE_TOKEN_VAULT_ADDRESS,
+      CONTRACT_INTERFACES.L2_NATIVE_TOKEN_VAULT.interface,
+      this.provider
+    );
+    const tokenAddress = await erc20Contract.tokenAddress(assetId);
+    return tokenAddress;
+  }
 
+  public async getBalance(address: string, blockNumber: number, tokenAddress: string): Promise<bigint> {
     if (utils.isETH(tokenAddress)) {
       return await this.rpcCall(async () => {
-        return await this.provider.getBalance(address, blockTag);
+        return await this.provider.getBalance(address, blockNumber);
       }, "getBalance");
     }
 
     const erc20Contract = new RetryableContract(tokenAddress, utils.IERC20, this.provider);
-    return await erc20Contract.balanceOf(address, { blockTag });
+    return await erc20Contract.balanceOf(address, { blockTag: blockNumber });
   }
 
   public async onModuleInit(): Promise<void> {

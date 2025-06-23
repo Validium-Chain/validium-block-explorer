@@ -1,4 +1,4 @@
-import { types } from "zksync-web3";
+import { types } from "zksync-ethers";
 import { Transfer } from "../../interfaces/transfer.interface";
 import { ExtractTransferHandler } from "../../interfaces/extractTransferHandler.interface";
 import { TransferType } from "../../transfer.service";
@@ -8,11 +8,12 @@ import parseLog from "../../../utils/parseLog";
 import { BASE_TOKEN_ADDRESS, CONTRACT_INTERFACES } from "../../../constants";
 export const ethMintFromL1Handler: ExtractTransferHandler = {
   matches: (log: types.Log): boolean => log.address.toLowerCase() === BASE_TOKEN_ADDRESS,
-  extract: (
+  extract: async (
     log: types.Log,
+    _,
     blockDetails: types.BlockDetails,
     transactionDetails?: types.TransactionDetails
-  ): Transfer => {
+  ): Promise<Transfer> => {
     const parsedLog = parseLog(CONTRACT_INTERFACES.ETH_TOKEN, log);
 
     return {
@@ -25,7 +26,7 @@ export const ethMintFromL1Handler: ExtractTransferHandler = {
       type: TransferType.Deposit,
       tokenType: TokenType.BaseToken,
       isFeeOrRefund: false,
-      logIndex: log.logIndex,
+      logIndex: log.index,
       transactionIndex: log.transactionIndex,
       timestamp: transactionDetails?.receivedAt || unixTimeToDate(blockDetails.timestamp),
     };

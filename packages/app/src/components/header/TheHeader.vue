@@ -5,7 +5,8 @@
         <div class="logo-container">
           <router-link :to="{ name: 'home' }">
             <span class="sr-only">ZKsync</span>
-            <zk-sync-era />
+            <zk-sync-era v-if="currentNetwork.groupId === 'era'" />
+            <zk-sync-arrows-logo v-else />
           </router-link>
         </div>
         <div class="burger-button-container">
@@ -145,6 +146,7 @@ import DiscordIcon from "@/components/icons/DiscordIcon.vue";
 import HeroArrows from "@/components/icons/HeroArrows.vue";
 import TwitterIcon from "@/components/icons/TwitterIcon.vue";
 import ZkSync from "@/components/icons/ZkSync.vue";
+import ZkSyncArrowsLogo from "@/components/icons/ZkSyncArrowsLogo.vue";
 import ZkSyncEra from "@/components/icons/ZkSyncEra.vue";
 
 import useContext from "@/composables/useContext";
@@ -159,7 +161,7 @@ const { currentNetwork } = useContext();
 const navigation = reactive([
   {
     label: computed(() => t("header.nav.documentation")),
-    url: "https://docs.zksync.io/build/tooling/zksync-block-explorers",
+    url: "https://docs.zksync.io/zksync-era/tooling/block-explorers",
   },
 ]);
 
@@ -204,7 +206,7 @@ const toolsLinks = reactive(links);
 
 const socials = [
   { url: "https://join.zksync.dev/", component: DiscordIcon },
-  { url: "https://twitter.com/zksync", component: TwitterIcon },
+  { url: "https://x.com/zksync", component: TwitterIcon },
 ];
 
 const hasContent = computed(() => {

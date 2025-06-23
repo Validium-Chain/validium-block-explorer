@@ -1,8 +1,8 @@
 import { Test } from "@nestjs/testing";
 import { Logger } from "@nestjs/common";
 import { mock } from "jest-mock-extended";
-import { BigNumber } from "ethers";
-import { types } from "zksync-web3";
+import { types } from "zksync-ethers";
+import { BlockchainService } from "../blockchain/blockchain.service";
 import { TransferService } from "./transfer.service";
 import { TokenType } from "../token/token.service";
 
@@ -64,10 +64,18 @@ const toTxReceipt = (receipt: any): types.TransactionReceipt => receipt as types
 
 describe("TransferService", () => {
   let transferService: TransferService;
+  let blockchainServiceMock: BlockchainService;
 
   beforeEach(async () => {
+    blockchainServiceMock = mock<BlockchainService>();
     const app = await Test.createTestingModule({
-      providers: [TransferService],
+      providers: [
+        TransferService,
+        {
+          provide: BlockchainService,
+          useValue: blockchainServiceMock,
+        },
+      ],
     }).compile();
 
     app.useLogger(mock<Logger>());
@@ -95,7 +103,7 @@ describe("TransferService", () => {
         it("returns proper transfers", async () => {
           const expectedTransfers = [
             {
-              amount: BigNumber.from("0x6f05b59d3b20000"),
+              amount: BigInt("0x6f05b59d3b20000"),
               blockNumber: 215276,
               from: "0xd206eaf6819007535e893410cfa01885ce40e99a",
               to: "0xd206eaf6819007535e893410cfa01885ce40e99a",
@@ -110,7 +118,7 @@ describe("TransferService", () => {
               timestamp: receivedAt,
             },
             {
-              amount: BigNumber.from("0x6f05b59d3b20000"),
+              amount: BigInt("0x6f05b59d3b20000"),
               blockNumber: 215276,
               from: "0xd206eaf6819007535e893410cfa01885ce40e99a",
               to: "0xd754ff5e8a6f257e162f72578a4bb0493c0681d8",
@@ -125,7 +133,7 @@ describe("TransferService", () => {
               timestamp: receivedAt,
             },
             {
-              amount: BigNumber.from("0"),
+              amount: BigInt("0"),
               blockNumber: 215276,
               from: "0xd206eaf6819007535e893410cfa01885ce40e99a",
               to: "0xd206eaf6819007535e893410cfa01885ce40e99a",
@@ -161,7 +169,7 @@ describe("TransferService", () => {
               to: "0xfb7e0856e44eff812a44a9f47733d7d55c39aa28",
               transactionHash: "0xad909404d4390c350281c9e896cfadc528d071cb87c62f4ed026016fd4694d77",
               blockNumber: 7485644,
-              amount: BigNumber.from("0x2386f26fc10000"),
+              amount: BigInt("0x2386f26fc10000"),
               tokenAddress: "0x000000000000000000000000000000000000800a",
               tokenType: TokenType.BaseToken,
               type: "deposit",
@@ -176,7 +184,7 @@ describe("TransferService", () => {
               to: "0xfb7e0856e44eff812a44a9f47733d7d55c39aa28",
               transactionHash: "0xad909404d4390c350281c9e896cfadc528d071cb87c62f4ed026016fd4694d77",
               blockNumber: 7485644,
-              amount: BigNumber.from("0x2386f26fc10000"),
+              amount: BigInt("0x2386f26fc10000"),
               tokenAddress: "0x000000000000000000000000000000000000800a",
               tokenType: TokenType.BaseToken,
               type: "transfer",
@@ -191,7 +199,7 @@ describe("TransferService", () => {
               to: "0x0000000000000000000000000000000000008001",
               transactionHash: "0xad909404d4390c350281c9e896cfadc528d071cb87c62f4ed026016fd4694d77",
               blockNumber: 7485644,
-              amount: BigNumber.from("0x0141b56ff62900"),
+              amount: BigInt("0x0141b56ff62900"),
               tokenAddress: "0x000000000000000000000000000000000000800a",
               tokenType: TokenType.BaseToken,
               type: "fee",
@@ -206,7 +214,7 @@ describe("TransferService", () => {
               to: "0xfb7e0856e44eff812a44a9f47733d7d55c39aa28",
               transactionHash: "0xad909404d4390c350281c9e896cfadc528d071cb87c62f4ed026016fd4694d77",
               blockNumber: 7485644,
-              amount: BigNumber.from("0x29eb1faec300"),
+              amount: BigInt("0x29eb1faec300"),
               tokenAddress: "0x000000000000000000000000000000000000800a",
               tokenType: TokenType.BaseToken,
               type: "refund",
@@ -238,7 +246,7 @@ describe("TransferService", () => {
               to: "0xfb7e0856e44eff812a44a9f47733d7d55c39aa28",
               transactionHash: "0x90b20334a21b92843b5d0a2127a0fb3f9aa9661e1ead7a7a4bc27c5ce1e8584a",
               blockNumber: 7483775,
-              amount: BigNumber.from("0x11c37937e08000"),
+              amount: BigInt("0x11c37937e08000"),
               tokenAddress: "0x000000000000000000000000000000000000800a",
               tokenType: TokenType.BaseToken,
               type: "deposit",
@@ -253,7 +261,7 @@ describe("TransferService", () => {
               to: "0xc62a6e5d98b3a0de9ec4a930fbb354443e92e9e0",
               transactionHash: "0x90b20334a21b92843b5d0a2127a0fb3f9aa9661e1ead7a7a4bc27c5ce1e8584a",
               blockNumber: 7483775,
-              amount: BigNumber.from("0x11c37937e08000"),
+              amount: BigInt("0x11c37937e08000"),
               tokenAddress: "0x000000000000000000000000000000000000800a",
               tokenType: TokenType.BaseToken,
               type: "transfer",
@@ -268,7 +276,7 @@ describe("TransferService", () => {
               to: "0x0000000000000000000000000000000000008001",
               transactionHash: "0x90b20334a21b92843b5d0a2127a0fb3f9aa9661e1ead7a7a4bc27c5ce1e8584a",
               blockNumber: 7483775,
-              amount: BigNumber.from("0x0150b5fa93bf00"),
+              amount: BigInt("0x0150b5fa93bf00"),
               tokenAddress: "0x000000000000000000000000000000000000800a",
               tokenType: TokenType.BaseToken,
               type: "fee",
@@ -283,7 +291,7 @@ describe("TransferService", () => {
               to: "0xfb7e0856e44eff812a44a9f47733d7d55c39aa28",
               transactionHash: "0x90b20334a21b92843b5d0a2127a0fb3f9aa9661e1ead7a7a4bc27c5ce1e8584a",
               blockNumber: 7483775,
-              amount: BigNumber.from("0xdb01bc43a500"),
+              amount: BigInt("0xdb01bc43a500"),
               tokenAddress: "0x000000000000000000000000000000000000800a",
               tokenType: TokenType.BaseToken,
               type: "refund",
@@ -315,7 +323,7 @@ describe("TransferService", () => {
               to: "0x0000000000000000000000000000000000008001",
               transactionHash: "0x7d7bd680763ab90fed0097cd75ae468ce01b7cfb64b4e2c74f9e47e3ba73f937",
               blockNumber: 7485219,
-              amount: BigNumber.from("0x010425b6917e00"),
+              amount: BigInt("0x010425b6917e00"),
               tokenAddress: "0x000000000000000000000000000000000000800a",
               tokenType: TokenType.BaseToken,
               type: "fee",
@@ -330,7 +338,7 @@ describe("TransferService", () => {
               to: "0xfb7e0856e44eff812a44a9f47733d7d55c39aa28",
               transactionHash: "0x7d7bd680763ab90fed0097cd75ae468ce01b7cfb64b4e2c74f9e47e3ba73f937",
               blockNumber: 7485219,
-              amount: BigNumber.from("0x7c948f3acf00"),
+              amount: BigInt("0x7c948f3acf00"),
               tokenAddress: "0x000000000000000000000000000000000000800a",
               tokenType: TokenType.BaseToken,
               type: "refund",
@@ -358,7 +366,7 @@ describe("TransferService", () => {
         it("returns proper transfers", async () => {
           const expectedTransfers = [
             {
-              amount: BigNumber.from("0x018034d06a6900"),
+              amount: BigInt("0x018034d06a6900"),
               blockNumber: 3226848,
               from: "0x481e48ce19781c3ca573967216dee75fdcf70f54",
               to: "0x0000000000000000000000000000000000008001",
@@ -373,7 +381,7 @@ describe("TransferService", () => {
               timestamp: receivedAt,
             },
             {
-              amount: BigNumber.from("0x2386f26fc10000"),
+              amount: BigInt("0x2386f26fc10000"),
               blockNumber: 3226848,
               from: "0x481e48ce19781c3ca573967216dee75fdcf70f54",
               to: "0xc9593dc3dcad5f3804aaa5af12a9d74d0c00e4b0",
@@ -403,7 +411,7 @@ describe("TransferService", () => {
         it("returns proper transfers", async () => {
           const expectedTransfers = [
             {
-              amount: BigNumber.from("0x017e3f22499e00"),
+              amount: BigInt("0x017e3f22499e00"),
               blockNumber: 4144647,
               from: "0xd2229549f09af28dd0c21b1ade77f739aa8406b5",
               to: "0x0000000000000000000000000000000000008001",
@@ -418,7 +426,7 @@ describe("TransferService", () => {
               timestamp: receivedAt,
             },
             {
-              amount: BigNumber.from("0x01"),
+              amount: BigInt("0x01"),
               blockNumber: 4144647,
               from: "0xd2229549f09af28dd0c21b1ade77f739aa8406b5",
               to: "0x0000000000000000000000000000000000000000",
@@ -450,7 +458,7 @@ describe("TransferService", () => {
         it("returns proper transfers", async () => {
           const expectedTransfers = [
             {
-              amount: BigNumber.from("0x119f17fe16000"),
+              amount: BigInt("0x119f17fe16000"),
               blockNumber: 264367,
               from: "0xd754ff5e8a6f257e162f72578a4bb0493c0681d8",
               to: "0x0000000000000000000000000000000000008001",
@@ -465,7 +473,7 @@ describe("TransferService", () => {
               timestamp: receivedAt,
             },
             {
-              amount: BigNumber.from("0x16345785d8a0000"),
+              amount: BigInt("0x16345785d8a0000"),
               blockNumber: 264367,
               from: "0xd754ff5e8a6f257e162f72578a4bb0493c0681d8",
               to: "0x000000000000000000000000000000000000800a",
@@ -480,7 +488,7 @@ describe("TransferService", () => {
               timestamp: receivedAt,
             },
             {
-              amount: BigNumber.from("0x16345785d8a0000"),
+              amount: BigInt("0x16345785d8a0000"),
               blockNumber: 264367,
               from: "0xd754ff5e8a6f257e162f72578a4bb0493c0681d8",
               to: "0xd754ff5e8a6f257e162f72578a4bb0493c0681d8",
@@ -495,7 +503,7 @@ describe("TransferService", () => {
               timestamp: receivedAt,
             },
             {
-              amount: BigNumber.from("0x326ecef5b300"),
+              amount: BigInt("0x326ecef5b300"),
               blockNumber: 264367,
               from: "0x0000000000000000000000000000000000008001",
               to: "0xd754ff5e8a6f257e162f72578a4bb0493c0681d8",
@@ -527,7 +535,7 @@ describe("TransferService", () => {
         it("returns proper transfers", async () => {
           const expectedTransfers = [
             {
-              amount: BigNumber.from("0x119f17fe16000"),
+              amount: BigInt("0x119f17fe16000"),
               blockNumber: 258521,
               from: "0xd754ff5e8a6f257e162f72578a4bb0493c0681d8",
               to: "0x0000000000000000000000000000000000008001",
@@ -542,7 +550,7 @@ describe("TransferService", () => {
               timestamp: receivedAt,
             },
             {
-              amount: BigNumber.from("0x429d069189e0000"),
+              amount: BigInt("0x429d069189e0000"),
               blockNumber: 258521,
               from: "0xd754ff5e8a6f257e162f72578a4bb0493c0681d8",
               to: "0x000000000000000000000000000000000000800a",
@@ -557,7 +565,7 @@ describe("TransferService", () => {
               timestamp: receivedAt,
             },
             {
-              amount: BigNumber.from("0x429d069189e0000"),
+              amount: BigInt("0x429d069189e0000"),
               blockNumber: 258521,
               from: "0xd754ff5e8a6f257e162f72578a4bb0493c0681d8",
               to: "0xd206eaf6819007535e893410cfa01885ce40e99a",
@@ -572,7 +580,7 @@ describe("TransferService", () => {
               timestamp: receivedAt,
             },
             {
-              amount: BigNumber.from("0x2d8c82046f00"),
+              amount: BigInt("0x2d8c82046f00"),
               blockNumber: 258521,
               from: "0x0000000000000000000000000000000000008001",
               to: "0xd754ff5e8a6f257e162f72578a4bb0493c0681d8",
@@ -607,7 +615,7 @@ describe("TransferService", () => {
               to: "0x0000000000000000000000000000000000008001",
               transactionHash: "0x6424dd7b1d52f9d8f6ea8300f1bf1eab65246f71f00fd3197e49c6423c9a59bf",
               blockNumber: 7508823,
-              amount: BigNumber.from("0xb782effd8200"),
+              amount: BigInt("0xb782effd8200"),
               tokenAddress: "0x000000000000000000000000000000000000800a",
               tokenType: TokenType.BaseToken,
               type: "fee",
@@ -622,7 +630,7 @@ describe("TransferService", () => {
               to: "0xc62a6e5d98b3a0de9ec4a930fbb354443e92e9e0",
               transactionHash: "0x6424dd7b1d52f9d8f6ea8300f1bf1eab65246f71f00fd3197e49c6423c9a59bf",
               blockNumber: 7508823,
-              amount: BigNumber.from("0x00"),
+              amount: BigInt("0x00"),
               tokenAddress: "0x000000000000000000000000000000000000800a",
               tokenType: TokenType.BaseToken,
               type: "withdrawal",
@@ -637,7 +645,7 @@ describe("TransferService", () => {
               to: "0xfb7e0856e44eff812a44a9f47733d7d55c39aa28",
               transactionHash: "0x6424dd7b1d52f9d8f6ea8300f1bf1eab65246f71f00fd3197e49c6423c9a59bf",
               blockNumber: 7508823,
-              amount: BigNumber.from("0x71e06f110780"),
+              amount: BigInt("0x71e06f110780"),
               tokenAddress: "0x000000000000000000000000000000000000800a",
               tokenType: TokenType.BaseToken,
               type: "refund",
@@ -664,7 +672,7 @@ describe("TransferService", () => {
         it("returns proper transfers", async () => {
           const expectedTransfers = [
             {
-              amount: BigNumber.from("0x119f17fe16000"),
+              amount: BigInt("0x119f17fe16000"),
               blockNumber: 258521,
               from: "0xd754ff5e8a6f257e162f72578a4bb0493c0681d8",
               to: "0x0000000000000000000000000000000000008001",
@@ -679,7 +687,7 @@ describe("TransferService", () => {
               timestamp: receivedAt,
             },
             {
-              amount: BigNumber.from("0x429d069189e0000"),
+              amount: BigInt("0x429d069189e0000"),
               blockNumber: 258521,
               from: "0xd754ff5e8a6f257e162f72578a4bb0493c0681d8",
               to: "0x000000000000000000000000000000000000800a",
@@ -694,7 +702,7 @@ describe("TransferService", () => {
               timestamp: receivedAt,
             },
             {
-              amount: BigNumber.from("0x429d069189e0000"),
+              amount: BigInt("0x429d069189e0000"),
               blockNumber: 258521,
               from: "0xd754ff5e8a6f257e162f72578a4bb0493c0681d8",
               to: "0xd206eaf6819007535e893410cfa01885ce40e99a",
@@ -709,7 +717,7 @@ describe("TransferService", () => {
               timestamp: receivedAt,
             },
             {
-              amount: BigNumber.from("0x2d8c82046f00"),
+              amount: BigInt("0x2d8c82046f00"),
               blockNumber: 258521,
               from: "0x0000000000000000000000000000000000008001",
               to: "0xd754ff5e8a6f257e162f72578a4bb0493c0681d8",
@@ -742,7 +750,7 @@ describe("TransferService", () => {
         it("returns proper transfers", async () => {
           const expectedTransfers = [
             {
-              amount: BigNumber.from("0x989680"),
+              amount: BigInt("0x989680"),
               blockNumber: 3221037,
               from: "0x0000000000000000000000000000000000000000",
               to: "0x481e48ce19781c3ca573967216dee75fdcf70f54",
@@ -757,7 +765,7 @@ describe("TransferService", () => {
               timestamp: receivedAt,
             },
             {
-              amount: BigNumber.from("0x989680"),
+              amount: BigInt("0x989680"),
               blockNumber: 3221037,
               from: "0x481e48ce19781c3ca573967216dee75fdcf70f54",
               to: "0x481e48ce19781c3ca573967216dee75fdcf70f54",
@@ -788,7 +796,7 @@ describe("TransferService", () => {
         it("returns proper transfers", async () => {
           const expectedTransfers = [
             {
-              amount: BigNumber.from("0x018083f408d000"),
+              amount: BigInt("0x018083f408d000"),
               blockNumber: 3226875,
               from: "0x481e48ce19781c3ca573967216dee75fdcf70f54",
               to: "0x0000000000000000000000000000000000008001",
@@ -803,7 +811,7 @@ describe("TransferService", () => {
               timestamp: receivedAt,
             },
             {
-              amount: BigNumber.from("0x989680"),
+              amount: BigInt("0x989680"),
               blockNumber: 3226875,
               from: "0x481e48ce19781c3ca573967216dee75fdcf70f54",
               to: "0xc9593dc3dcad5f3804aaa5af12a9d74d0c00e4b0",
@@ -834,7 +842,7 @@ describe("TransferService", () => {
         it("returns proper transfers", async () => {
           const expectedTransfers = [
             {
-              amount: BigNumber.from("0x0277b0afc08300"),
+              amount: BigInt("0x0277b0afc08300"),
               blockNumber: 3226739,
               from: "0x481e48ce19781c3ca573967216dee75fdcf70f54",
               to: "0x0000000000000000000000000000000000008001",
@@ -849,7 +857,7 @@ describe("TransferService", () => {
               timestamp: receivedAt,
             },
             {
-              amount: BigNumber.from("0x989680"),
+              amount: BigInt("0x989680"),
               blockNumber: 3226739,
               from: "0x481e48ce19781c3ca573967216dee75fdcf70f54",
               to: "0x0000000000000000000000000000000000000000",
@@ -864,7 +872,7 @@ describe("TransferService", () => {
               timestamp: receivedAt,
             },
             {
-              amount: BigNumber.from("0x989680"),
+              amount: BigInt("0x989680"),
               blockNumber: 3226739,
               from: "0x481e48ce19781c3ca573967216dee75fdcf70f54",
               to: "0x481e48ce19781c3ca573967216dee75fdcf70f54",
@@ -895,7 +903,7 @@ describe("TransferService", () => {
         it("returns proper transfers", async () => {
           const expectedTransfers = [
             {
-              amount: BigNumber.from("0x027673d9c05b00"),
+              amount: BigInt("0x027673d9c05b00"),
               blockNumber: 3226822,
               from: "0x481e48ce19781c3ca573967216dee75fdcf70f54",
               to: "0x0000000000000000000000000000000000008001",
@@ -910,7 +918,7 @@ describe("TransferService", () => {
               timestamp: receivedAt,
             },
             {
-              amount: BigNumber.from("0x989680"),
+              amount: BigInt("0x989680"),
               blockNumber: 3226822,
               from: "0x481e48ce19781c3ca573967216dee75fdcf70f54",
               to: "0x0000000000000000000000000000000000000000",
@@ -925,7 +933,7 @@ describe("TransferService", () => {
               timestamp: receivedAt,
             },
             {
-              amount: BigNumber.from("0x989680"),
+              amount: BigInt("0x989680"),
               blockNumber: 3226822,
               from: "0x481e48ce19781c3ca573967216dee75fdcf70f54",
               to: "0xc9593dc3dcad5f3804aaa5af12a9d74d0c00e4b0",
@@ -958,7 +966,7 @@ describe("TransferService", () => {
         it("returns proper transfers", async () => {
           const expectedTransfers = [
             {
-              amount: BigNumber.from("0x01baa818335500"),
+              amount: BigInt("0x01baa818335500"),
               blockNumber: 3230131,
               from: "0x481e48ce19781c3ca573967216dee75fdcf70f54",
               to: "0x0000000000000000000000000000000000008001",
@@ -989,7 +997,7 @@ describe("TransferService", () => {
         it("returns proper transfers", async () => {
           const expectedTransfers = [
             {
-              amount: BigNumber.from("0x0134b578f8b200"),
+              amount: BigInt("0x0134b578f8b200"),
               blockNumber: 3230534,
               from: "0x481e48ce19781c3ca573967216dee75fdcf70f54",
               to: "0x0000000000000000000000000000000000008001",
@@ -1022,7 +1030,7 @@ describe("TransferService", () => {
         it("returns proper transfers", async () => {
           const expectedTransfers = [
             {
-              amount: BigNumber.from("0x420c98159bd600"),
+              amount: BigInt("0x420c98159bd600"),
               blockNumber: 3277437,
               from: "0x481e48ce19781c3ca573967216dee75fdcf70f54",
               to: "0x0000000000000000000000000000000000008001",
@@ -1037,7 +1045,7 @@ describe("TransferService", () => {
               timestamp: receivedAt,
             },
             {
-              amount: BigNumber.from("0x056bc75e2d63100000"),
+              amount: BigInt("0x056bc75e2d63100000"),
               blockNumber: 3277437,
               from: "0x481e48ce19781c3ca573967216dee75fdcf70f54",
               to: "0x481e48ce19781c3ca573967216dee75fdcf70f54",
@@ -1068,7 +1076,7 @@ describe("TransferService", () => {
         it("returns proper transfers", async () => {
           const expectedTransfers = [
             {
-              amount: BigNumber.from("0x016345785d8a0000"),
+              amount: BigInt("0x016345785d8a0000"),
               blockNumber: 3233097,
               from: "0x0000000000000000000000000000000000000000",
               to: "0xb7e2355b87ff9ae9b146ca6dcee9c02157937b01",
@@ -1083,7 +1091,7 @@ describe("TransferService", () => {
               timestamp: receivedAt,
             },
             {
-              amount: BigNumber.from("0x016345785d8a0000"),
+              amount: BigInt("0x016345785d8a0000"),
               blockNumber: 3233097,
               from: "0xb7e2355b87ff9ae9b146ca6dcee9c02157937b01",
               to: "0xb7e2355b87ff9ae9b146ca6dcee9c02157937b01",
@@ -1118,7 +1126,7 @@ describe("TransferService", () => {
               to: "0xfb7e0856e44eff812a44a9f47733d7d55c39aa28",
               transactionHash: "0x90b20334a21b92843b5d0a2127a0fb3f9aa9661e1ead7a7a4bc27c5ce1e8584a",
               blockNumber: 7483775,
-              amount: BigNumber.from("0x11c37937e08000"),
+              amount: BigInt("0x11c37937e08000"),
               tokenAddress: "0x000000000000000000000000000000000000800a",
               tokenType: TokenType.BaseToken,
               type: "deposit",
@@ -1133,7 +1141,7 @@ describe("TransferService", () => {
               to: "0xc62a6e5d98b3a0de9ec4a930fbb354443e92e9e0",
               transactionHash: "0x90b20334a21b92843b5d0a2127a0fb3f9aa9661e1ead7a7a4bc27c5ce1e8584a",
               blockNumber: 7483775,
-              amount: BigNumber.from("0x11c37937e08000"),
+              amount: BigInt("0x11c37937e08000"),
               tokenAddress: "0x000000000000000000000000000000000000800a",
               tokenType: TokenType.BaseToken,
               type: "transfer",
@@ -1148,7 +1156,7 @@ describe("TransferService", () => {
               to: "0x0000000000000000000000000000000000008001",
               transactionHash: "0x90b20334a21b92843b5d0a2127a0fb3f9aa9661e1ead7a7a4bc27c5ce1e8584a",
               blockNumber: 7483775,
-              amount: BigNumber.from("0x0150b5fa93bf00"),
+              amount: BigInt("0x0150b5fa93bf00"),
               tokenAddress: "0x000000000000000000000000000000000000800a",
               tokenType: TokenType.BaseToken,
               type: "fee",
@@ -1163,7 +1171,7 @@ describe("TransferService", () => {
               to: "0xfb7e0856e44eff812a44a9f47733d7d55c39aa28",
               transactionHash: "0x90b20334a21b92843b5d0a2127a0fb3f9aa9661e1ead7a7a4bc27c5ce1e8584a",
               blockNumber: 7483775,
-              amount: BigNumber.from("0xdb01bc43a500"),
+              amount: BigInt("0xdb01bc43a500"),
               tokenAddress: "0x000000000000000000000000000000000000800a",
               tokenType: TokenType.BaseToken,
               type: "refund",
@@ -1190,7 +1198,7 @@ describe("TransferService", () => {
         it("returns proper transfers", async () => {
           const expectedTransfers = [
             {
-              amount: BigNumber.from("0x0152d41ffe1400"),
+              amount: BigInt("0x0152d41ffe1400"),
               blockNumber: 3615452,
               from: "0xd206eaf6819007535e893410cfa01885ce40e99a",
               to: "0x0000000000000000000000000000000000008001",
@@ -1205,7 +1213,7 @@ describe("TransferService", () => {
               timestamp: receivedAt,
             },
             {
-              amount: BigNumber.from("0x0a"),
+              amount: BigInt("0x0a"),
               blockNumber: 3615452,
               from: "0xd206eaf6819007535e893410cfa01885ce40e99a",
               to: "0xd754ff5e8a6f257e162f72578a4bb0493c0681d8",
@@ -1240,7 +1248,7 @@ describe("TransferService", () => {
               to: "0x0000000000000000000000000000000000008001",
               transactionHash: "0x866cd72b7b677299fba830bf7a9c227e2297256dcba021b97ede26e1ab456b8e",
               blockNumber: 7492781,
-              amount: BigNumber.from("0xc51affb6ed80"),
+              amount: BigInt("0xc51affb6ed80"),
               tokenAddress: "0x000000000000000000000000000000000000800a",
               tokenType: TokenType.BaseToken,
               type: "fee",
@@ -1255,7 +1263,7 @@ describe("TransferService", () => {
               to: "0x0000000000000000000000000000000000000000",
               transactionHash: "0x866cd72b7b677299fba830bf7a9c227e2297256dcba021b97ede26e1ab456b8e",
               blockNumber: 7492781,
-              amount: BigNumber.from("0x055de6a779bbac0000"),
+              amount: BigInt("0x055de6a779bbac0000"),
               tokenAddress: "0x24a5f3f8b311b053a55c90cfff3bd2ee34c85fc0",
               tokenType: TokenType.ERC20,
               type: "transfer",
@@ -1270,7 +1278,7 @@ describe("TransferService", () => {
               to: "0xc62a6e5d98b3a0de9ec4a930fbb354443e92e9e0",
               transactionHash: "0x866cd72b7b677299fba830bf7a9c227e2297256dcba021b97ede26e1ab456b8e",
               blockNumber: 7492781,
-              amount: BigNumber.from("0x055de6a779bbac0000"),
+              amount: BigInt("0x055de6a779bbac0000"),
               tokenAddress: "0x24a5f3f8b311b053a55c90cfff3bd2ee34c85fc0",
               tokenType: TokenType.ERC20,
               type: "withdrawal",
@@ -1285,7 +1293,7 @@ describe("TransferService", () => {
               to: "0xfb7e0856e44eff812a44a9f47733d7d55c39aa28",
               transactionHash: "0x866cd72b7b677299fba830bf7a9c227e2297256dcba021b97ede26e1ab456b8e",
               blockNumber: 7492781,
-              amount: BigNumber.from("0x780bd72ca280"),
+              amount: BigInt("0x780bd72ca280"),
               tokenAddress: "0x000000000000000000000000000000000000800a",
               tokenType: TokenType.BaseToken,
               type: "refund",
@@ -1314,7 +1322,7 @@ describe("TransferService", () => {
         it("returns proper transfers", async () => {
           const expectedTransfers = [
             {
-              amount: BigNumber.from("0x04a061c5f0b100"),
+              amount: BigInt("0x04a061c5f0b100"),
               blockNumber: 3618694,
               from: "0x481e48ce19781c3ca573967216dee75fdcf70f54",
               to: "0x0000000000000000000000000000000000008001",
@@ -1329,7 +1337,7 @@ describe("TransferService", () => {
               timestamp: receivedAt,
             },
             {
-              amount: BigNumber.from("0x0a"),
+              amount: BigInt("0x0a"),
               blockNumber: 3618694,
               from: "0x481e48ce19781c3ca573967216dee75fdcf70f54",
               to: "0x08b222f412eb5d141fb32db443f2eed06ae65a24",
@@ -1344,7 +1352,7 @@ describe("TransferService", () => {
               timestamp: receivedAt,
             },
             {
-              amount: BigNumber.from("0x05"),
+              amount: BigInt("0x05"),
               blockNumber: 3618694,
               from: "0x08b222f412eb5d141fb32db443f2eed06ae65a24",
               to: "0x65ebd487e692d688f2a36fb833729076dc85ed34",
@@ -1359,7 +1367,7 @@ describe("TransferService", () => {
               timestamp: receivedAt,
             },
             {
-              amount: BigNumber.from("0x05"),
+              amount: BigInt("0x05"),
               blockNumber: 3618694,
               from: "0x481e48ce19781c3ca573967216dee75fdcf70f54",
               to: "0x65ebd487e692d688f2a36fb833729076dc85ed34",
@@ -1374,7 +1382,7 @@ describe("TransferService", () => {
               timestamp: receivedAt,
             },
             {
-              amount: BigNumber.from("0x05"),
+              amount: BigInt("0x05"),
               blockNumber: 3618694,
               from: "0x481e48ce19781c3ca573967216dee75fdcf70f54",
               to: "0x65ebd487e692d688f2a36fb833729076dc85ed34",
@@ -1389,7 +1397,7 @@ describe("TransferService", () => {
               timestamp: receivedAt,
             },
             {
-              amount: BigNumber.from("0x05"),
+              amount: BigInt("0x05"),
               blockNumber: 3618694,
               from: "0x08b222f412eb5d141fb32db443f2eed06ae65a24",
               to: "0x65ebd487e692d688f2a36fb833729076dc85ed34",
@@ -1404,7 +1412,7 @@ describe("TransferService", () => {
               timestamp: receivedAt,
             },
             {
-              amount: BigNumber.from("0x05"),
+              amount: BigInt("0x05"),
               blockNumber: 3618694,
               from: "0x481e48ce19781c3ca573967216dee75fdcf70f54",
               to: "0x65ebd487e692d688f2a36fb833729076dc85ed34",
@@ -1419,7 +1427,7 @@ describe("TransferService", () => {
               timestamp: receivedAt,
             },
             {
-              amount: BigNumber.from("0x05"),
+              amount: BigInt("0x05"),
               blockNumber: 3618694,
               from: "0x481e48ce19781c3ca573967216dee75fdcf70f54",
               to: "0x65ebd487e692d688f2a36fb833729076dc85ed34",
@@ -1450,7 +1458,7 @@ describe("TransferService", () => {
         it("returns proper transfers", async () => {
           const expectedTransfers = [
             {
-              amount: BigNumber.from("0x0b2cf038c49e00"),
+              amount: BigInt("0x0b2cf038c49e00"),
               blockNumber: 3619009,
               from: "0x481e48ce19781c3ca573967216dee75fdcf70f54",
               to: "0x0265d9a5af8af5fe070933e5e549d8fef08e09f4",
@@ -1465,7 +1473,7 @@ describe("TransferService", () => {
               timestamp: receivedAt,
             },
             {
-              amount: BigNumber.from("0x0b2cf038c49e00"),
+              amount: BigInt("0x0b2cf038c49e00"),
               blockNumber: 3619009,
               from: "0x0265d9a5af8af5fe070933e5e549d8fef08e09f4",
               to: "0x0000000000000000000000000000000000008001",
@@ -1480,7 +1488,7 @@ describe("TransferService", () => {
               timestamp: receivedAt,
             },
             {
-              amount: BigNumber.from("0x0a"),
+              amount: BigInt("0x0a"),
               blockNumber: 3619009,
               from: "0x481e48ce19781c3ca573967216dee75fdcf70f54",
               to: "0x08b222f412eb5d141fb32db443f2eed06ae65a24",
@@ -1495,7 +1503,7 @@ describe("TransferService", () => {
               timestamp: receivedAt,
             },
             {
-              amount: BigNumber.from("0x05"),
+              amount: BigInt("0x05"),
               blockNumber: 3619009,
               from: "0x08b222f412eb5d141fb32db443f2eed06ae65a24",
               to: "0x65ebd487e692d688f2a36fb833729076dc85ed34",
@@ -1510,7 +1518,7 @@ describe("TransferService", () => {
               timestamp: receivedAt,
             },
             {
-              amount: BigNumber.from("0x05"),
+              amount: BigInt("0x05"),
               blockNumber: 3619009,
               from: "0x481e48ce19781c3ca573967216dee75fdcf70f54",
               to: "0x65ebd487e692d688f2a36fb833729076dc85ed34",
@@ -1525,7 +1533,7 @@ describe("TransferService", () => {
               timestamp: receivedAt,
             },
             {
-              amount: BigNumber.from("0x05"),
+              amount: BigInt("0x05"),
               blockNumber: 3619009,
               from: "0x481e48ce19781c3ca573967216dee75fdcf70f54",
               to: "0x65ebd487e692d688f2a36fb833729076dc85ed34",
@@ -1540,7 +1548,7 @@ describe("TransferService", () => {
               timestamp: receivedAt,
             },
             {
-              amount: BigNumber.from("0x05"),
+              amount: BigInt("0x05"),
               blockNumber: 3619009,
               from: "0x08b222f412eb5d141fb32db443f2eed06ae65a24",
               to: "0x65ebd487e692d688f2a36fb833729076dc85ed34",
@@ -1555,7 +1563,7 @@ describe("TransferService", () => {
               timestamp: receivedAt,
             },
             {
-              amount: BigNumber.from("0x05"),
+              amount: BigInt("0x05"),
               blockNumber: 3619009,
               from: "0x481e48ce19781c3ca573967216dee75fdcf70f54",
               to: "0x65ebd487e692d688f2a36fb833729076dc85ed34",
@@ -1570,7 +1578,7 @@ describe("TransferService", () => {
               timestamp: receivedAt,
             },
             {
-              amount: BigNumber.from("0x05"),
+              amount: BigInt("0x05"),
               blockNumber: 3619009,
               from: "0x481e48ce19781c3ca573967216dee75fdcf70f54",
               to: "0x65ebd487e692d688f2a36fb833729076dc85ed34",
@@ -1601,7 +1609,7 @@ describe("TransferService", () => {
         it("returns proper transfers", async () => {
           const expectedTransfers = [
             {
-              amount: BigNumber.from("0x0b2cf038c49e00"),
+              amount: BigInt("0x0b2cf038c49e00"),
               blockNumber: 3601749,
               from: "0x481e48ce19781c3ca573967216dee75fdcf70f54",
               to: "0x0265d9a5af8af5fe070933e5e549d8fef08e09f4",
@@ -1616,7 +1624,7 @@ describe("TransferService", () => {
               timestamp: receivedAt,
             },
             {
-              amount: BigNumber.from("0x0b2cf038c49e00"),
+              amount: BigInt("0x0b2cf038c49e00"),
               blockNumber: 3601749,
               from: "0x0265d9a5af8af5fe070933e5e549d8fef08e09f4",
               to: "0x0000000000000000000000000000000000008001",
@@ -1631,7 +1639,7 @@ describe("TransferService", () => {
               timestamp: receivedAt,
             },
             {
-              amount: BigNumber.from("0x2386f26fc10000"),
+              amount: BigInt("0x2386f26fc10000"),
               blockNumber: 3601749,
               from: "0x481e48ce19781c3ca573967216dee75fdcf70f54",
               to: "0xbba0cf82ce98acd455bd34d7a53bb565a31372a6",
@@ -1646,7 +1654,7 @@ describe("TransferService", () => {
               timestamp: receivedAt,
             },
             {
-              amount: BigNumber.from("0x11c37937e08000"),
+              amount: BigInt("0x11c37937e08000"),
               blockNumber: 3601749,
               from: "0xbba0cf82ce98acd455bd34d7a53bb565a31372a6",
               to: "0x65ebd487e692d688f2a36fb833729076dc85ed34",
@@ -1661,7 +1669,7 @@ describe("TransferService", () => {
               timestamp: receivedAt,
             },
             {
-              amount: BigNumber.from("0x11c37937e08000"),
+              amount: BigInt("0x11c37937e08000"),
               blockNumber: 3601749,
               from: "0xbba0cf82ce98acd455bd34d7a53bb565a31372a6",
               to: "0xc9593dc3dcad5f3804aaa5af12a9d74d0c00e4b0",
@@ -1694,7 +1702,7 @@ describe("TransferService", () => {
         it("returns proper transfers", async () => {
           const expectedTransfers = [
             {
-              amount: BigNumber.from("0x6e45eb3828c800"),
+              amount: BigInt("0x6e45eb3828c800"),
               blockNumber: 3455042,
               from: "0xd206eaf6819007535e893410cfa01885ce40e99a",
               to: "0x0000000000000000000000000000000000008001",
@@ -1725,7 +1733,7 @@ describe("TransferService", () => {
         it("returns proper transfers", async () => {
           const expectedTransfers = [
             {
-              amount: BigNumber.from("0x02570592a28a00"),
+              amount: BigInt("0x02570592a28a00"),
               blockNumber: 3339976,
               from: "0x481e48ce19781c3ca573967216dee75fdcf70f54",
               to: "0x0000000000000000000000000000000000008001",
@@ -1742,7 +1750,7 @@ describe("TransferService", () => {
             {
               amount: undefined,
               blockNumber: 3339976,
-              fields: { tokenId: BigNumber.from("0x01") },
+              fields: { tokenId: BigInt("0x01") },
               from: "0x481e48ce19781c3ca573967216dee75fdcf70f54",
               to: "0x481e48ce19781c3ca573967216dee75fdcf70f54",
               tokenAddress: "0x4a80888f58d004c5ef2013d2cf974f00f42dd934",
@@ -1772,7 +1780,7 @@ describe("TransferService", () => {
         it("returns proper transfers", async () => {
           const expectedTransfers = [
             {
-              amount: BigNumber.from("0x011f05a0378000"),
+              amount: BigInt("0x011f05a0378000"),
               blockNumber: 3459441,
               from: "0xd206eaf6819007535e893410cfa01885ce40e99a",
               to: "0x0000000000000000000000000000000000008001",
@@ -1803,7 +1811,7 @@ describe("TransferService", () => {
         it("returns proper transfers", async () => {
           const expectedTransfers = [
             {
-              amount: BigNumber.from("0x01bbaabf001a00"),
+              amount: BigInt("0x01bbaabf001a00"),
               blockNumber: 3459471,
               from: "0xd206eaf6819007535e893410cfa01885ce40e99a",
               to: "0x0000000000000000000000000000000000008001",
@@ -1820,7 +1828,7 @@ describe("TransferService", () => {
             {
               amount: undefined,
               blockNumber: 3459471,
-              fields: { tokenId: BigNumber.from("0x01") },
+              fields: { tokenId: BigInt("0x01") },
               from: "0xd206eaf6819007535e893410cfa01885ce40e99a",
               to: "0xd754ff5e8a6f257e162f72578a4bb0493c0681d8",
               tokenAddress: "0x89bcb56033920b8a654109faeb1f87e0c3358cad",
@@ -1852,7 +1860,7 @@ describe("TransferService", () => {
         it("returns proper transfers", async () => {
           const expectedTransfers = [
             {
-              amount: BigNumber.from("0x0b2cf038c49e00"),
+              amount: BigInt("0x0b2cf038c49e00"),
               blockNumber: 3286895,
               from: "0x481e48ce19781c3ca573967216dee75fdcf70f54",
               to: "0x0265d9a5af8af5fe070933e5e549d8fef08e09f4",
@@ -1867,7 +1875,7 @@ describe("TransferService", () => {
               timestamp: receivedAt,
             },
             {
-              amount: BigNumber.from("0x0b2cf038c49e00"),
+              amount: BigInt("0x0b2cf038c49e00"),
               blockNumber: 3286895,
               from: "0x0265d9a5af8af5fe070933e5e549d8fef08e09f4",
               to: "0x0000000000000000000000000000000000008001",
@@ -1900,7 +1908,7 @@ describe("TransferService", () => {
         it("returns proper transfers", async () => {
           const expectedTransfers = [
             {
-              amount: BigNumber.from("0x1606ddfd9b8000"),
+              amount: BigInt("0x1606ddfd9b8000"),
               blockNumber: 3622224,
               from: "0xd206eaf6819007535e893410cfa01885ce40e99a",
               to: "0x0000000000000000000000000000000000008001",
@@ -1946,7 +1954,7 @@ describe("TransferService", () => {
         it("returns proper transfers", async () => {
           const expectedTransfers = [
             {
-              amount: BigNumber.from("0x0220aed39b7400"),
+              amount: BigInt("0x0220aed39b7400"),
               blockNumber: 3680310,
               from: "0xd206eaf6819007535e893410cfa01885ce40e99a",
               to: "0x0000000000000000000000000000000000008001",
@@ -1984,7 +1992,7 @@ describe("TransferService", () => {
         );
         expect(transfers).toStrictEqual([
           {
-            amount: BigNumber.from("0xcdab63f37000"),
+            amount: BigInt("0xcdab63f37000"),
             blockNumber: 166322,
             from: "0x088282b61a8cc1014186076698e35bcc92e88b0d",
             to: "0x0000000000000000000000000000000000008001",
@@ -1999,7 +2007,7 @@ describe("TransferService", () => {
             timestamp: receivedAt,
           },
           {
-            amount: BigNumber.from("0x01"),
+            amount: BigInt("0x01"),
             blockNumber: 166322,
             from: "0x0000000000000000000000000000000000000000",
             to: "0x7869cd51c2483169e1ce06fa6912e7d1e3bf629b",
@@ -2014,7 +2022,7 @@ describe("TransferService", () => {
             timestamp: receivedAt,
           },
           {
-            amount: BigNumber.from("0x54c81f943900"),
+            amount: BigInt("0x54c81f943900"),
             blockNumber: 166322,
             from: "0x0000000000000000000000000000000000008001",
             to: "0x088282b61a8cc1014186076698e35bcc92e88b0d",
@@ -2044,7 +2052,7 @@ describe("TransferService", () => {
         expect(transfers).toStrictEqual([
           {
             blockNumber: 4985412,
-            fields: { tokenId: BigNumber.from("0x15") },
+            fields: { tokenId: BigInt("0x15") },
             from: "0x76ff48d4bd33b4d5943bc82b8ee9ccaf079bcaaf",
             logIndex: 5,
             timestamp: receivedAt,
@@ -2060,7 +2068,7 @@ describe("TransferService", () => {
           },
           {
             blockNumber: 4985412,
-            fields: { tokenId: BigNumber.from("0x015ef3c4") },
+            fields: { tokenId: BigInt("0x015ef3c4") },
             from: "0x38686aa0f4e8fc2fd2910272671b26ff9c53c73a",
             logIndex: 6,
             timestamp: receivedAt,
@@ -2076,7 +2084,7 @@ describe("TransferService", () => {
           },
           {
             blockNumber: 4985412,
-            fields: { tokenId: BigNumber.from("0x016ef3c4") },
+            fields: { tokenId: BigInt("0x016ef3c4") },
             from: "0x38686aa0f4e8fc2fd2910272671b26ff9c53c73a",
             logIndex: 7,
             timestamp: receivedAt,
@@ -2097,9 +2105,9 @@ describe("TransferService", () => {
     describe("when tx contains transfer log which fails to be parsed", () => {
       it("throws an error", async () => {
         const txReceipt = toTxReceipt(logParsingError);
-        expect(() =>
+        await expect(
           transferService.getTransfers(txReceipt.logs, blockDetails, transactionDetails, txReceipt)
-        ).toThrowError();
+        ).rejects.toThrowError();
       });
     });
 
@@ -2113,7 +2121,7 @@ describe("TransferService", () => {
             to: "0xfb7e0856e44eff812a44a9f47733d7d55c39aa28",
             transactionHash: "0xad909404d4390c350281c9e896cfadc528d071cb87c62f4ed026016fd4694d77",
             blockNumber: 7485644,
-            amount: BigNumber.from("0x2386f26fc10000"),
+            amount: BigInt("0x2386f26fc10000"),
             tokenAddress: "0x000000000000000000000000000000000000800a",
             tokenType: TokenType.BaseToken,
             type: "deposit",
@@ -2128,7 +2136,7 @@ describe("TransferService", () => {
             to: "0xfb7e0856e44eff812a44a9f47733d7d55c39aa28",
             transactionHash: "0xad909404d4390c350281c9e896cfadc528d071cb87c62f4ed026016fd4694d77",
             blockNumber: 7485644,
-            amount: BigNumber.from("0x2386f26fc10000"),
+            amount: BigInt("0x2386f26fc10000"),
             tokenAddress: "0x000000000000000000000000000000000000800a",
             tokenType: TokenType.BaseToken,
             type: "transfer",
@@ -2143,7 +2151,7 @@ describe("TransferService", () => {
             to: "0x0000000000000000000000000000000000008001",
             transactionHash: "0xad909404d4390c350281c9e896cfadc528d071cb87c62f4ed026016fd4694d77",
             blockNumber: 7485644,
-            amount: BigNumber.from("0x0141b56ff62900"),
+            amount: BigInt("0x0141b56ff62900"),
             tokenAddress: "0x000000000000000000000000000000000000800a",
             tokenType: TokenType.BaseToken,
             type: "fee",
@@ -2175,7 +2183,7 @@ describe("TransferService", () => {
             to: "0x0000000000000000000000000000000000008001",
             transactionHash: "0xad909404d4390c350281c9e896cfadc528d071cb87c62f4ed026016fd4694d77",
             blockNumber: 7485644,
-            amount: BigNumber.from("0x0141b56ff62900"),
+            amount: BigInt("0x0141b56ff62900"),
             tokenAddress: "0x000000000000000000000000000000000000800a",
             tokenType: TokenType.BaseToken,
             type: "fee",
@@ -2203,7 +2211,7 @@ describe("TransferService", () => {
       it("returns proper transfers", async () => {
         const expectedTransfers = [
           {
-            amount: BigNumber.from("0x01baa818335500"),
+            amount: BigInt("0x01baa818335500"),
             blockNumber: 3230131,
             from: "0x481e48ce19781c3ca573967216dee75fdcf70f54",
             to: "0x0000000000000000000000000000000000008001",
@@ -2230,7 +2238,7 @@ describe("TransferService", () => {
 
         const expectedTransfers = [
           {
-            amount: BigNumber.from("0xf22ec29c9c4980"),
+            amount: BigInt("0xf22ec29c9c4980"),
             blockNumber: 6711853,
             from: "0x0000000000000000000000000000000000008001",
             isFeeOrRefund: false,
@@ -2246,7 +2254,10 @@ describe("TransferService", () => {
           },
         ];
 
-        const transfers = await transferService.getTransfers(blockWithNoTxsLogs, blockDetails);
+        const transfers = await transferService.getTransfers(
+          blockWithNoTxsLogs as unknown as types.Log[],
+          blockDetails
+        );
         expect(transfers).toStrictEqual(expectedTransfers);
       });
     });

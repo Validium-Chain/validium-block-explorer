@@ -9,14 +9,7 @@
         </div>
       </div>
       <div class="contract-link-container">
-        <Button
-          class="contract-verification-link"
-          :data-testid="$testId.contractVerificationButton"
-          tag="RouterLink"
-          :to="{ name: 'contract-verification', query: { address: contract.address } }"
-        >
-          {{ t("contract.bytecode.verifyButton") }}
-        </Button>
+        <VerificationButton :address="contract.address" />
       </div>
     </div>
     <div v-else class="functions-contract-container">
@@ -26,6 +19,15 @@
       <div v-if="sourceCode" class="source-code-container">
         <div class="info-field-label">{{ t("contract.sourceCode.label") }}</div>
         <CodeBlock v-for="(item, index) in sourceCode" :key="index" :code="item.code" :label="item.label" />
+      </div>
+      <div v-if="settings" class="source-code-container">
+        <CodeBlock :code="settings" :label="t('contract.settings.label')" :label-bold="true" />
+      </div>
+      <div v-if="sourceCode" class="abi-json-field-container">
+        <div class="info-field-label">{{ t("contract.abiInteraction.contractAbi") }}</div>
+        <div class="abi-json">
+          <AbiData :value="abiJson" />
+        </div>
       </div>
       <div class="bytecode-field-container">
         <div class="info-field-label">{{ t("contract.bytecode.deployedBytecode") }}</div>
@@ -41,10 +43,11 @@
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 
-import Button from "@/components/common/Button.vue";
+import AbiData from "@/components/common/table/fields/AbiData.vue";
 import ByteData from "@/components/common/table/fields/ByteData.vue";
 import CodeBlock from "@/components/contract/CodeBlock.vue";
 import CompilationInfo from "@/components/contract/CompilationInfo.vue";
+import VerificationButton from "@/components/contract/VerificationButton.vue";
 
 import type { Contract } from "@/composables/useAddress";
 import type { PropType } from "vue";
@@ -59,6 +62,13 @@ const props = defineProps({
 
 const { t } = useI18n();
 
+const settings = computed(() => {
+  const sourceCode = props.contract?.verificationInfo?.request?.sourceCode;
+  if (typeof sourceCode === "object" && typeof sourceCode.settings === "object" && sourceCode.settings) {
+    return JSON.stringify(sourceCode.settings, null, 4);
+  }
+  return undefined;
+});
 const sourceCode = computed<undefined | { code: string; label: string }[]>(() => {
   if (!props.contract?.verificationInfo) {
     return undefined;
@@ -96,6 +106,14 @@ const sourceCode = computed<undefined | { code: string; label: string }[]>(() =>
     });
   }
 });
+
+const abiJson = computed<undefined | string>(() => {
+  if (!props.contract?.verificationInfo?.artifacts?.abi) {
+    return undefined;
+  }
+
+  return JSON.stringify(props.contract.verificationInfo.artifacts.abi);
+});
 </script>
 
 <style scoped lang="scss">
@@ -114,9 +132,6 @@ const sourceCode = computed<undefined | { code: string; label: string }[]>(() =>
     }
     .contract-link-container {
       @apply mt-5 flex items-end md:mt-0;
-      .contract-verification-link {
-        @apply whitespace-nowrap md:px-5 md:py-3;
-      }
     }
   }
   .functions-contract-container {
@@ -132,6 +147,7 @@ const sourceCode = computed<undefined | { code: string; label: string }[]>(() =>
       @apply text-sm font-bold text-neutral-700;
     }
     .source-code-container,
+    .abi-json-field-container,
     .bytecode-field-container {
       @apply grid grid-cols-1 gap-2;
     }

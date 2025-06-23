@@ -1,4 +1,4 @@
-import { types } from "zksync-web3";
+import { types } from "zksync-ethers";
 import { Transfer } from "../transfer/interfaces/transfer.interface";
 import { TransferType } from "../transfer/transfer.service";
 import { BASE_TOKEN_ADDRESS } from "../constants";
@@ -12,7 +12,7 @@ export default function isInternalTransaction(transfer: Transfer, transactionRec
   }
   if (
     transactionReceipt?.from.toLowerCase() === transfer.from.toLowerCase() &&
-    transactionReceipt.to.toLowerCase() === transfer.to.toLowerCase()
+    transactionReceipt.to?.toLowerCase() === transfer.to.toLowerCase()
   ) {
     return false;
   }

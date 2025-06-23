@@ -20,8 +20,6 @@ import useContext from "@/composables/useContext";
 import type { BatchDetails } from "@/composables/useBatch";
 import type { Component, PropType } from "vue";
 
-import { arrayHalfDivider } from "@/utils/helpers";
-
 const { t } = useI18n();
 const { width: screenWidth } = useWindowSize();
 const { currentNetwork } = useContext();
@@ -50,19 +48,20 @@ const tableInfoItems = computed(() => {
     url?: string;
   };
 
-  let tableItems: InfoTableItem[] = [
+  const tableItemsLeft: InfoTableItem[] = [
     {
       label: t("batches.index"),
       tooltip: t("batches.indexTooltip"),
       value: props.batchNumber,
     },
   ];
+  const tableItemsRight: InfoTableItem[] = [];
 
   if (!props.batch) {
-    return [tableItems];
+    return [tableItemsLeft];
   }
 
-  tableItems.push(
+  tableItemsLeft.push(
     {
       label: t("batches.size"),
       tooltip: t("batches.sizeTooltip"),
@@ -81,21 +80,21 @@ const tableInfoItems = computed(() => {
       component: props.batch.rootHash ? CopyContent : undefined,
     }
   );
+  const settlementChainExplorerUrl =
+    currentNetwork.value.settlementChainExplorerUrl || currentNetwork.value.l1ExplorerUrl;
   for (const [key, timeKey] of [
     ["commitTxHash", "committedAt", "notYetCommitted"],
     ["proveTxHash", "provenAt", "notYetProven"],
     ["executeTxHash", "executedAt", "notYetExecuted"],
   ] as [keyof BatchDetails, keyof BatchDetails, string][]) {
     if (props.batch[key]) {
-      tableItems.push(
+      tableItemsRight.push(
         {
           label: t(`batches.${key}`),
           tooltip: t(`batches.${key}Tooltip`),
           value: { value: props.batch[key] },
           component: CopyContent,
-          url: currentNetwork.value.l1ExplorerUrl
-            ? `${currentNetwork.value.l1ExplorerUrl}/tx/${props.batch[key]}`
-            : undefined,
+          url: settlementChainExplorerUrl ? `${settlementChainExplorerUrl}/tx/${props.batch[key]}` : undefined,
         },
         {
           label: t(`batches.${timeKey}`),
@@ -108,10 +107,10 @@ const tableInfoItems = computed(() => {
   }
 
   if (screenWidth.value < 1024) {
-    return [tableItems];
+    return [tableItemsLeft.concat(tableItemsRight)];
   }
 
-  return arrayHalfDivider(tableItems);
+  return [tableItemsLeft, tableItemsRight];
 });
 </script>
 
